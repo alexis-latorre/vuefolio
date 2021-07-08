@@ -1,0 +1,16 @@
+@import 'variables.scss';
+
+@function sizeBtn($name) {
+  @debug $name;
+  $r: $m;
+  @if ($name == "xxs") {
+    $r: $xxs;
+  }
+  @if ($name == "l") {
+    $r: $l;
+  }
+  @if ($name == "venus") {
+    $r: $venus;
+  }
+  @return $r;
+}
