@@ -25,12 +25,7 @@
     </thead>
     <tbody>
       <tr v-for="change in history" :key="change.version">
-        <td v-if="change.current">{{ change.version }}</td>
-        <td v-else>
-          <router-link :to="`/archive_${appUrl}_${change.version}`">{{
-            change.version
-          }}</router-link>
-        </td>
+        <td>{{ change.version }}</td>
         <td>{{ change.date }}</td>
       </tr>
     </tbody>

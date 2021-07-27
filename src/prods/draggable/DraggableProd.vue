@@ -179,6 +179,7 @@ export default {
   padding: 0.4em;
 }
 #draggable {
+  margin-bottom: 1rem;
   padding: 1rem;
   border: solid 1px silver;
 }

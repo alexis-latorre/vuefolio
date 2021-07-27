@@ -7,8 +7,8 @@
 </template>
 
 <script>
-import Product from "../components/Product.vue";
-import DraggableProd from "../prods/draggable/DraggableProd.vue";
+import Product from "@/components/Product.vue";
+import DraggableProd from "@/prods/draggable/DraggableProd.vue";
 
 export default {
   data() {

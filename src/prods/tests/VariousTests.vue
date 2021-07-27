@@ -1,257 +1,572 @@
 <template>
-  <button @click="test">Reading</button>
-  <button @click="test2">Writing</button>
-  length: {{ tasks.length }}
-  <ul v-if="tasks.length > 0">
-    <li v-for="task in tasks" :key="task.id">{{ task.title }}</li>
-  </ul>
-
-  <div
-    id="draggable"
-    @mousedown="startDrag($event)"
-    @mousemove="dragDiv($event)"
-    @mouseup="endDrag($event)"
-  >
-    <template v-for="(item, i) in items" :key="item.name">
-      <div :id="`dropzone_${i + 1}`" class="dropzone"></div>
-      <div :id="`placeholder_${i + 1}`" class="placeholder">
-        <div>{{ item.name }}</div>
-      </div>
-    </template>
-    <div :id="`dropzone_${items.length + 1}`" class="dropzone"></div>
-  </div>
+  <input @change="md5()" id="file" type="file" />
+  <span>{{ m }}</span>
 </template>
 
 <script>
-import { db } from "../../firebase";
-
+import { auth } from "@/firebase";
 export default {
   data() {
     return {
-      tasks: [],
-      target: null,
-      dropzones: document.getElementsByClassName("dropzone"),
-      placeholder: null,
-      placeholders: document.getElementsByClassName("placeholder"),
-      dragging: false,
-      from: { x: 0, y: 0 },
-      to: { x: 0, y: 0 },
-      distance: { x: 0, y: 0 },
-      styleBackup: null,
-      pos: null,
-      items: [
-        { name: "Item 1" },
-        { name: "Item 2" },
-        { name: "Item 3" },
-        { name: "Item 4" },
-        { name: "Item 5" },
-        { name: "Item 6" },
-        { name: "Item 7" },
-        { name: "Item 8" },
-      ],
+      user: undefined,
+      m: "",
     };
   },
   methods: {
-    getElement(coords, els) {
-      for (const el of els) {
-        if (this.isInRect(coords, el.getClientRects()[0])) {
-          return el;
-        }
+    md5() {
+      const f = document.getElementById("file");
+      console.debug(f);
+      if (null === f) return;
+
+      var reader = new FileReader();
+      const ctx = this;
+      reader.onload = function () {
+        var arrayBuffer = this.result,
+          array = new Uint8Array(arrayBuffer),
+          binaryString = String.fromCharCode.apply(null, array);
+
+        console.log(binaryString);
+        ctx.m = ctx.getMD5(binaryString);
+      };
+      reader.readAsArrayBuffer(f.files[0]);
+    },
+    getMD5(d) {
+      var r = this.M(this.V(this.Y(this.X(d), 8 * d.length)));
+      return r.toLowerCase();
+    },
+    M(d) {
+      for (var _, m = "0123456789ABCDEF", f = "", r = 0; r < d.length; r++)
+        (_ = d.charCodeAt(r)),
+          (f += m.charAt((_ >>> 4) & 15) + m.charAt(15 & _));
+      return f;
+    },
+    X(d) {
+      for (var _ = Array(d.length >> 2), m = 0; m < _.length; m++) _[m] = 0;
+      for (m = 0; m < 8 * d.length; m += 8)
+        _[m >> 5] |= (255 & d.charCodeAt(m / 8)) << m % 32;
+      return _;
+    },
+    V(d) {
+      for (var _ = "", m = 0; m < 32 * d.length; m += 8)
+        _ += String.fromCharCode((d[m >> 5] >>> m % 32) & 255);
+      return _;
+    },
+    Y(d, _) {
+      (d[_ >> 5] |= 128 << _ % 32), (d[14 + (((_ + 64) >>> 9) << 4)] = _);
+      for (
+        var m = 1732584193,
+          f = -271733879,
+          r = -1732584194,
+          i = 271733878,
+          n = 0;
+        n < d.length;
+        n += 16
+      ) {
+        var h = m,
+          t = f,
+          g = r,
+          e = i;
+        (f = this.md5_ii(
+          (f = this.md5_ii(
+            (f = this.md5_ii(
+              (f = this.md5_ii(
+                (f = this.md5_hh(
+                  (f = this.md5_hh(
+                    (f = this.md5_hh(
+                      (f = this.md5_hh(
+                        (f = this.md5_gg(
+                          (f = this.md5_gg(
+                            (f = this.md5_gg(
+                              (f = this.md5_gg(
+                                (f = this.md5_ff(
+                                  (f = this.md5_ff(
+                                    (f = this.md5_ff(
+                                      (f = this.md5_ff(
+                                        f,
+                                        (r = this.md5_ff(
+                                          r,
+                                          (i = this.md5_ff(
+                                            i,
+                                            (m = this.md5_ff(
+                                              m,
+                                              f,
+                                              r,
+                                              i,
+                                              d[n + 0],
+                                              7,
+                                              -680876936
+                                            )),
+                                            f,
+                                            r,
+                                            d[n + 1],
+                                            12,
+                                            -389564586
+                                          )),
+                                          m,
+                                          f,
+                                          d[n + 2],
+                                          17,
+                                          606105819
+                                        )),
+                                        i,
+                                        m,
+                                        d[n + 3],
+                                        22,
+                                        -1044525330
+                                      )),
+                                      (r = this.md5_ff(
+                                        r,
+                                        (i = this.md5_ff(
+                                          i,
+                                          (m = this.md5_ff(
+                                            m,
+                                            f,
+                                            r,
+                                            i,
+                                            d[n + 4],
+                                            7,
+                                            -176418897
+                                          )),
+                                          f,
+                                          r,
+                                          d[n + 5],
+                                          12,
+                                          1200080426
+                                        )),
+                                        m,
+                                        f,
+                                        d[n + 6],
+                                        17,
+                                        -1473231341
+                                      )),
+                                      i,
+                                      m,
+                                      d[n + 7],
+                                      22,
+                                      -45705983
+                                    )),
+                                    (r = this.md5_ff(
+                                      r,
+                                      (i = this.md5_ff(
+                                        i,
+                                        (m = this.md5_ff(
+                                          m,
+                                          f,
+                                          r,
+                                          i,
+                                          d[n + 8],
+                                          7,
+                                          1770035416
+                                        )),
+                                        f,
+                                        r,
+                                        d[n + 9],
+                                        12,
+                                        -1958414417
+                                      )),
+                                      m,
+                                      f,
+                                      d[n + 10],
+                                      17,
+                                      -42063
+                                    )),
+                                    i,
+                                    m,
+                                    d[n + 11],
+                                    22,
+                                    -1990404162
+                                  )),
+                                  (r = this.md5_ff(
+                                    r,
+                                    (i = this.md5_ff(
+                                      i,
+                                      (m = this.md5_ff(
+                                        m,
+                                        f,
+                                        r,
+                                        i,
+                                        d[n + 12],
+                                        7,
+                                        1804603682
+                                      )),
+                                      f,
+                                      r,
+                                      d[n + 13],
+                                      12,
+                                      -40341101
+                                    )),
+                                    m,
+                                    f,
+                                    d[n + 14],
+                                    17,
+                                    -1502002290
+                                  )),
+                                  i,
+                                  m,
+                                  d[n + 15],
+                                  22,
+                                  1236535329
+                                )),
+                                (r = this.md5_gg(
+                                  r,
+                                  (i = this.md5_gg(
+                                    i,
+                                    (m = this.md5_gg(
+                                      m,
+                                      f,
+                                      r,
+                                      i,
+                                      d[n + 1],
+                                      5,
+                                      -165796510
+                                    )),
+                                    f,
+                                    r,
+                                    d[n + 6],
+                                    9,
+                                    -1069501632
+                                  )),
+                                  m,
+                                  f,
+                                  d[n + 11],
+                                  14,
+                                  643717713
+                                )),
+                                i,
+                                m,
+                                d[n + 0],
+                                20,
+                                -373897302
+                              )),
+                              (r = this.md5_gg(
+                                r,
+                                (i = this.md5_gg(
+                                  i,
+                                  (m = this.md5_gg(
+                                    m,
+                                    f,
+                                    r,
+                                    i,
+                                    d[n + 5],
+                                    5,
+                                    -701558691
+                                  )),
+                                  f,
+                                  r,
+                                  d[n + 10],
+                                  9,
+                                  38016083
+                                )),
+                                m,
+                                f,
+                                d[n + 15],
+                                14,
+                                -660478335
+                              )),
+                              i,
+                              m,
+                              d[n + 4],
+                              20,
+                              -405537848
+                            )),
+                            (r = this.md5_gg(
+                              r,
+                              (i = this.md5_gg(
+                                i,
+                                (m = this.md5_gg(
+                                  m,
+                                  f,
+                                  r,
+                                  i,
+                                  d[n + 9],
+                                  5,
+                                  568446438
+                                )),
+                                f,
+                                r,
+                                d[n + 14],
+                                9,
+                                -1019803690
+                              )),
+                              m,
+                              f,
+                              d[n + 3],
+                              14,
+                              -187363961
+                            )),
+                            i,
+                            m,
+                            d[n + 8],
+                            20,
+                            1163531501
+                          )),
+                          (r = this.md5_gg(
+                            r,
+                            (i = this.md5_gg(
+                              i,
+                              (m = this.md5_gg(
+                                m,
+                                f,
+                                r,
+                                i,
+                                d[n + 13],
+                                5,
+                                -1444681467
+                              )),
+                              f,
+                              r,
+                              d[n + 2],
+                              9,
+                              -51403784
+                            )),
+                            m,
+                            f,
+                            d[n + 7],
+                            14,
+                            1735328473
+                          )),
+                          i,
+                          m,
+                          d[n + 12],
+                          20,
+                          -1926607734
+                        )),
+                        (r = this.md5_hh(
+                          r,
+                          (i = this.md5_hh(
+                            i,
+                            (m = this.md5_hh(m, f, r, i, d[n + 5], 4, -378558)),
+                            f,
+                            r,
+                            d[n + 8],
+                            11,
+                            -2022574463
+                          )),
+                          m,
+                          f,
+                          d[n + 11],
+                          16,
+                          1839030562
+                        )),
+                        i,
+                        m,
+                        d[n + 14],
+                        23,
+                        -35309556
+                      )),
+                      (r = this.md5_hh(
+                        r,
+                        (i = this.md5_hh(
+                          i,
+                          (m = this.md5_hh(
+                            m,
+                            f,
+                            r,
+                            i,
+                            d[n + 1],
+                            4,
+                            -1530992060
+                          )),
+                          f,
+                          r,
+                          d[n + 4],
+                          11,
+                          1272893353
+                        )),
+                        m,
+                        f,
+                        d[n + 7],
+                        16,
+                        -155497632
+                      )),
+                      i,
+                      m,
+                      d[n + 10],
+                      23,
+                      -1094730640
+                    )),
+                    (r = this.md5_hh(
+                      r,
+                      (i = this.md5_hh(
+                        i,
+                        (m = this.md5_hh(m, f, r, i, d[n + 13], 4, 681279174)),
+                        f,
+                        r,
+                        d[n + 0],
+                        11,
+                        -358537222
+                      )),
+                      m,
+                      f,
+                      d[n + 3],
+                      16,
+                      -722521979
+                    )),
+                    i,
+                    m,
+                    d[n + 6],
+                    23,
+                    76029189
+                  )),
+                  (r = this.md5_hh(
+                    r,
+                    (i = this.md5_hh(
+                      i,
+                      (m = this.md5_hh(m, f, r, i, d[n + 9], 4, -640364487)),
+                      f,
+                      r,
+                      d[n + 12],
+                      11,
+                      -421815835
+                    )),
+                    m,
+                    f,
+                    d[n + 15],
+                    16,
+                    530742520
+                  )),
+                  i,
+                  m,
+                  d[n + 2],
+                  23,
+                  -995338651
+                )),
+                (r = this.md5_ii(
+                  r,
+                  (i = this.md5_ii(
+                    i,
+                    (m = this.md5_ii(m, f, r, i, d[n + 0], 6, -198630844)),
+                    f,
+                    r,
+                    d[n + 7],
+                    10,
+                    1126891415
+                  )),
+                  m,
+                  f,
+                  d[n + 14],
+                  15,
+                  -1416354905
+                )),
+                i,
+                m,
+                d[n + 5],
+                21,
+                -57434055
+              )),
+              (r = this.md5_ii(
+                r,
+                (i = this.md5_ii(
+                  i,
+                  (m = this.md5_ii(m, f, r, i, d[n + 12], 6, 1700485571)),
+                  f,
+                  r,
+                  d[n + 3],
+                  10,
+                  -1894986606
+                )),
+                m,
+                f,
+                d[n + 10],
+                15,
+                -1051523
+              )),
+              i,
+              m,
+              d[n + 1],
+              21,
+              -2054922799
+            )),
+            (r = this.md5_ii(
+              r,
+              (i = this.md5_ii(
+                i,
+                (m = this.md5_ii(m, f, r, i, d[n + 8], 6, 1873313359)),
+                f,
+                r,
+                d[n + 15],
+                10,
+                -30611744
+              )),
+              m,
+              f,
+              d[n + 6],
+              15,
+              -1560198380
+            )),
+            i,
+            m,
+            d[n + 13],
+            21,
+            1309151649
+          )),
+          (r = this.md5_ii(
+            r,
+            (i = this.md5_ii(
+              i,
+              (m = this.md5_ii(m, f, r, i, d[n + 4], 6, -145523070)),
+              f,
+              r,
+              d[n + 11],
+              10,
+              -1120210379
+            )),
+            m,
+            f,
+            d[n + 2],
+            15,
+            718787259
+          )),
+          i,
+          m,
+          d[n + 9],
+          21,
+          -343485551
+        )),
+          (m = this.safe_add(m, h)),
+          (f = this.safe_add(f, t)),
+          (r = this.safe_add(r, g)),
+          (i = this.safe_add(i, e));
       }
-      return null;
+      return Array(m, f, r, i);
     },
-    getDropzone(coords) {
-      return this.getElement(coords, this.dropzones);
-    },
-    getPlaceholder(coords) {
-      return this.getElement(coords, this.placeholders);
-    },
-    isInRect(mouse, rect) {
-      return (
-        mouse.x > rect.x + window.scrollX &&
-        mouse.x < rect.x + window.scrollX + rect.width &&
-        mouse.y > rect.y + window.scrollY &&
-        mouse.y < rect.y + window.scrollY + rect.height
+    md5_cmn(d, _, m, f, r, i) {
+      return this.safe_add(
+        this.bit_rol(
+          this.safe_add(this.safe_add(_, d), this.safe_add(f, i)),
+          r
+        ),
+        m
       );
     },
-    isActionMove(srcId, targetId) {
-      return targetId > 0 && (targetId < srcId - 1 || targetId > srcId + 1);
+    md5_ff(d, _, m, f, r, i, n) {
+      return this.md5_cmn((_ & m) | (~_ & f), d, _, r, i, n);
     },
-    startDrag(e) {
-      this.from = { x: e.pageX, y: e.pageY };
-      e.preventDefault();
-      e.stopPropagation();
-      this.dragging = true;
-      this.placeholder = this.getPlaceholder(this.from);
-      if (null !== this.placeholder) {
-        this.styleBackup = this.placeholder.style;
-        this.pos = this.placeholder.getBoundingClientRect();
-      }
+    md5_gg(d, _, m, f, r, i, n) {
+      return this.md5_cmn((_ & f) | (m & ~f), d, _, r, i, n);
     },
-    dragDiv(e) {
-      if (!this.dragging) return;
-      if (null !== this.placeholder) {
-        this.placeholder.style.position = "fixed";
-        this.placeholder.style.width = "500px";
-        this.placeholder.style.left =
-          e.pageX - (this.from.x - this.pos.x) + "px";
-        this.placeholder.style.top =
-          e.pageY - (this.from.y - this.pos.y) + "px";
-        this.placeholder.style.margin = "0";
-        this.placeholder.style.padding = "0";
-        this.placeholder.style.opacity = "0.7";
-      }
-
-      const hoveredDropzone = this.getDropzone({ x: e.pageX, y: e.pageY });
-
-      for (const dropzone of this.dropzones) {
-        dropzone.classList.remove("droppable");
-      }
-      if (null !== hoveredDropzone) {
-        hoveredDropzone.classList.add("droppable");
-      }
+    md5_hh(d, _, m, f, r, i, n) {
+      return this.md5_cmn(_ ^ m ^ f, d, _, r, i, n);
     },
-    endDrag(e) {
-      let target = null;
-      this.to = { x: e.pageX, y: e.pageY };
-
-      this.distance.x = this.to.x - this.from.x;
-      this.distance.y = this.to.y - this.from.y;
-      this.dragging = false;
-
-      target = this.getDropzone(this.to);
-
-      if (null === target) {
-        if (null !== this.placeholder)
-          this.placeholder.style = this.styleBackup;
-        return;
+    md5_ii(d, _, m, f, r, i, n) {
+      return this.md5_cmn(m ^ (_ | ~f), d, _, r, i, n);
+    },
+    safe_add(d, _) {
+      var m = (65535 & d) + (65535 & _);
+      return (((d >> 16) + (_ >> 16) + (m >> 16)) << 16) | (65535 & m);
+    },
+    bit_rol(d, _) {
+      return (d << _) | (d >>> (32 - _));
+    },
+  },
+  mounted() {
+    auth.onAuthStateChanged((user) => {
+      if (user) {
+        this.user = user;
+      } else {
+        this.user = undefined;
       }
-      if (null != this.placeholder) {
-        const idSrc = parseInt(this.placeholder.id.split("_")[1], 10);
-        const idTarget = parseInt(target.id.split("_")[1], 10);
-        target.classList.remove("droppable");
-
-        // If item is moved before current position
-        if (idSrc > idTarget && idSrc - idTarget > 0) {
-          const tmp = this.placeholder.innerHTML;
-          this.placeholder.innerHTML = this.placeholders[idSrc - 1].innerHTML;
-
-          for (let i = 0; i < idSrc - idTarget; i++) {
-            this.placeholders[idSrc - 1 - i].innerHTML = this.placeholders[
-              idSrc - 2 - i
-            ].innerHTML;
-          }
-          this.placeholders[idTarget - 1].innerHTML = tmp;
-        }
-        // If item is moved after current position
-        else if (idSrc < idTarget && idTarget - idSrc > 1) {
-          const tmp = this.placeholder.innerHTML;
-
-          for (let i = 0; i < idTarget - idSrc - 1; i++) {
-            this.placeholders[idSrc + i - 1].innerHTML = this.placeholders[
-              idSrc + i
-            ].innerHTML;
-          }
-          this.placeholders[idTarget - 2].innerHTML = tmp;
-        }
-        this.placeholder.style = this.styleBackup;
-      }
-      this.dropzones = document.getElementsByClassName("dropzone");
-      this.placeholders = document.getElementsByClassName("placeholder");
-    },
-    test() {
-      this.tasks = [];
-      const tasks = db.collection("todo");
-      tasks
-        .get()
-        .then((docs) => {
-          docs.forEach((doc) => {
-            if (doc.exists) {
-              this.tasks.push(doc.data());
-            } else {
-              // doc.data() will be undefined in this case
-              console.log("No such document!");
-            }
-          });
-        })
-        .catch((error) => {
-          console.log("Error getting document:", error);
-        });
-    },
-    test2() {
-      var citiesRef = db.collection("cities");
-
-      Promise.all([
-        citiesRef.doc("SF").collection("landmarks").doc().set({
-          name: "Golden Gate Bridge",
-          type: "bridge",
-        }),
-        citiesRef.doc("SF").collection("landmarks").doc().set({
-          name: "Legion of Honor",
-          type: "museum",
-        }),
-        citiesRef.doc("LA").collection("landmarks").doc().set({
-          name: "Griffith Park",
-          type: "park",
-        }),
-        citiesRef.doc("LA").collection("landmarks").doc().set({
-          name: "The Getty",
-          type: "museum",
-        }),
-        citiesRef.doc("DC").collection("landmarks").doc().set({
-          name: "Lincoln Memorial",
-          type: "memorial",
-        }),
-        citiesRef.doc("DC").collection("landmarks").doc().set({
-          name: "National Air and Space Museum",
-          type: "museum",
-        }),
-        citiesRef.doc("TOK").collection("landmarks").doc().set({
-          name: "Ueno Park",
-          type: "park",
-        }),
-        citiesRef.doc("TOK").collection("landmarks").doc().set({
-          name: "National Museum of Nature and Science",
-          type: "museum",
-        }),
-        citiesRef.doc("BJ").collection("landmarks").doc().set({
-          name: "Jingshan Park",
-          type: "park",
-        }),
-        citiesRef.doc("BJ").collection("landmarks").doc().set({
-          name: "Beijing Ancient Observatory",
-          type: "museum",
-        }),
-      ]);
-    },
+    });
   },
 };
 </script>
-
-<style scoped lang="scss">
-.placeholder {
-  div {
-    padding: 0.6rem;
-  }
-}
-#position {
-  float: left;
-  background: #f8ffd3;
-  border: solid 1px #b9b49b;
-  font-size: 0.8rem;
-  line-height: 1em;
-  padding: 0.4em;
-}
-#draggable {
-  margin: 1rem;
-  padding: 1rem;
-  border: solid 1px silver;
-}
-.dropzone {
-  height: 1rem;
-}
-.droppable {
-  height: 2rem;
-  border: dashed 4px gray;
-}
-</style>

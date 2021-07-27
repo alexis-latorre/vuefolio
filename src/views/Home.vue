@@ -2,12 +2,18 @@
   <div>
     <Product title="Home">
       <p>Access all my work done with VueJs</p>
+      <ul>
+        <li><router-link to="/bin2dec">Bin2dec</router-link></li>
+        <li>
+          <router-link to="/border-radius">Border-radius editor</router-link>
+        </li>
+      </ul>
     </Product>
   </div>
 </template>
 
 <script>
-import Product from "../components/Product.vue";
+import Product from "@/components/Product.vue";
 
 export default {
   name: "Home",

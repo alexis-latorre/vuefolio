@@ -7,8 +7,8 @@
 </template>
 
 <script>
-import Product from "../components/Product.vue";
-import VariousTests from "../prods/tests/VariousTests.vue";
+import Product from "@/components/Product.vue";
+import VariousTests from "@/prods/tests/VariousTests.vue";
 
 export default {
   data() {
