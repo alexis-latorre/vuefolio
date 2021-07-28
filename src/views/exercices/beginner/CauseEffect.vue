@@ -41,11 +41,11 @@ export default {
   data() {
     return {
       metas: [
-        { key: "Current version", value: "0.1.0" },
-        { key: "Release date", value: "N/A" },
+        { key: "Current version", value: "1.0.0" },
+        { key: "Release date", value: "28/07/2021 14:58" },
         { key: "Author", value: "Alexis La Torre" },
       ],
-      history: [{ version: "0.1.0", date: "28/07/2021 10:06" }],
+      history: [{ version: "1.0.0", date: "28/07/2021 10:06" }],
     };
   },
   name: "Todo",

@@ -28,6 +28,60 @@
           width="200"
           :readOnly="true"
         />
+        <TextInput
+          id="street"
+          label="Address"
+          v-model:value="current.street"
+          width="200"
+          :readOnly="true"
+        />
+        <TextInput
+          id="city"
+          label="City"
+          v-model:value="current.city"
+          width="200"
+          :readOnly="true"
+        />
+        <TextInput
+          id="state"
+          label="State"
+          v-model:value="current.state"
+          width="200"
+          :readOnly="true"
+        />
+        <TextInput
+          id="country"
+          label="Country"
+          v-model:value="current.country"
+          width="200"
+          :readOnly="true"
+        />
+        <TextInput
+          id="telephone"
+          label="Phone number"
+          v-model:value="current.telephone"
+          width="200"
+          :readOnly="true"
+        />
+        <TextInput
+          id="birthday"
+          label="Birthday"
+          v-model:value="current.birthday"
+          width="200"
+          :readOnly="true"
+        />
+        <Button
+          :action="true"
+          middleIcon="far fa-times-circle"
+          :iconOnly="true"
+          :click="
+            () => {
+              current = null;
+            }
+          "
+        >
+          Close user details
+        </Button>
       </div>
     </div>
   </div>
@@ -35,6 +89,8 @@
 
 <script>
 import TextInput from "@/components/atoms/input/TextInput";
+import Button from "@/components/atoms/Button";
+
 export default {
   data() {
     return {
@@ -1045,6 +1101,7 @@ export default {
   },
   components: {
     TextInput: TextInput,
+    Button: Button,
   },
   methods: {
     loadUser(id) {
@@ -1060,6 +1117,7 @@ export default {
 
 <style lang="scss" scoped>
 @import "../../css/variables.scss";
+
 .container {
   display: grid;
   grid-template-columns: 1.3fr 0.7fr;
