@@ -7,6 +7,9 @@
         <li>
           <router-link to="/border-radius">Border-radius editor</router-link>
         </li>
+        <li>
+          <router-link to="/calculator">Calculator</router-link>
+        </li>
       </ul>
     </Product>
   </div>

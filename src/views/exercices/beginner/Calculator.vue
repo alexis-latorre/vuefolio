@@ -6,10 +6,7 @@
       :metas="metas"
       :history="history"
     >
-      <template v-slot:description>
-        This app preview the border-radius CSS properties with editor. User can
-        copy code in his clipboard too.
-      </template>
+      <template v-slot:description> This app is a basic calculator. </template>
       <CalculatorProd />
     </Product>
   </div>
@@ -17,17 +14,17 @@
 
 <script>
 import Product from "@/components/Product";
-import CalculatorProd from "@/prods/calculator/Calculator";
+import CalculatorProd from "@/prods/calculator/Calc";
 
 export default {
   data() {
     return {
       metas: [
-        { key: "Current version", value: "0.1.0" },
-        { key: "Release date", value: "N/A" },
+        { key: "Current version", value: "1.0.0" },
+        { key: "Release date", value: "27/07/2021 15:52" },
         { key: "Author", value: "Alexis La Torre" },
       ],
-      history: [{ version: "0.1.0", date: "27/07/2021 10:07" }],
+      history: [{ version: "1.0.0", date: "27/07/2021 10:07" }],
     };
   },
   name: "Todo",
