@@ -28,7 +28,8 @@
                 :min="0"
                 :max="100"
                 append="px"
-                v-on:change="changeValue('borderRadiusTL', $event)"
+                :value="borderRadiusTL"
+                @update-value="changeValue('borderRadiusTL', $event)"
               />
               <fieldset v-else>
                 <legend>Top left</legend>
@@ -38,7 +39,8 @@
                   :min="0"
                   :max="100"
                   append="/"
-                  v-on:change="changeValue('borderRadiusTL', $event)"
+                  :value="borderRadiusTL"
+                  @update-value="changeValue('borderRadiusTL', $event)"
                 />
                 <NumberInput
                   width="80"
@@ -46,7 +48,8 @@
                   :min="0"
                   :max="100"
                   append="px"
-                  v-on:change="changeValue('borderVerticalRadiusTL', $event)"
+                  :value="borderVerticalRadiusTL"
+                  @update-value="changeValue('borderVerticalRadiusTL', $event)"
                 />
               </fieldset>
               <br />
@@ -58,7 +61,8 @@
                 :min="0"
                 :max="100"
                 append="px"
-                v-on:change="changeValue('borderRadiusTR', $event)"
+                :value="borderRadiusTR"
+                @update-value="changeValue('borderRadiusTR', $event)"
               />
               <fieldset v-else>
                 <legend>Top right</legend>
@@ -68,7 +72,8 @@
                   :min="0"
                   :max="100"
                   append="px"
-                  v-on:change="changeValue('borderRadiusTR', $event)"
+                  :value="borderRadiusTR"
+                  @update-value="changeValue('borderRadiusTR', $event)"
                 />
                 <NumberInput
                   width="80"
@@ -76,7 +81,8 @@
                   :min="0"
                   :max="100"
                   append="px"
-                  v-on:change="changeValue('borderVerticalRadiusTR', $event)"
+                  :value="borderVerticalRadiusTR"
+                  @update-value="changeValue('borderVerticalRadiusTR', $event)"
                 />
               </fieldset>
               <bl />
@@ -88,7 +94,8 @@
                 :min="0"
                 :max="100"
                 append="px"
-                v-on:change="changeValue('borderRadiusBL', $event)"
+                :value="borderRadiusBL"
+                @update-value="changeValue('borderRadiusBL', $event)"
               />
               <fieldset v-else>
                 <legend>Bottom left</legend>
@@ -98,7 +105,8 @@
                   :min="0"
                   :max="100"
                   append="px"
-                  v-on:change="changeValue('borderRadiusBL', $event)"
+                  :value="borderRadiusBL"
+                  @update-value="changeValue('borderRadiusBL', $event)"
                 />
                 <NumberInput
                   width="80"
@@ -106,7 +114,8 @@
                   :min="0"
                   :max="100"
                   append="px"
-                  v-on:change="changeValue('borderVerticalRadiusBL', $event)"
+                  :value="borderVerticalRadiusBL"
+                  @update-value="changeValue('borderVerticalRadiusBL', $event)"
                 />
               </fieldset>
               <br />
@@ -118,7 +127,8 @@
                 :min="0"
                 :max="100"
                 append="px"
-                v-on:change="changeValue('borderRadiusBR', $event)"
+                :value="borderRadiusBR"
+                @update-value="changeValue('borderRadiusBR', $event)"
               />
               <fieldset v-else>
                 <legend>Bottom right</legend>
@@ -128,7 +138,8 @@
                   :min="0"
                   :max="100"
                   append="px"
-                  v-on:change="changeValue('borderRadiusBR', $event)"
+                  :value="borderRadiusBR"
+                  @update-value="changeValue('borderRadiusBR', $event)"
                 />
                 <NumberInput
                   width="80"
@@ -136,7 +147,8 @@
                   :min="0"
                   :max="100"
                   append="px"
-                  v-on:change="changeValue('borderVerticalRadiusBR', $event)"
+                  :value="borderVerticalRadiusBR"
+                  @update-value="changeValue('borderVerticalRadiusBR', $event)"
                 />
               </fieldset>
             </div>

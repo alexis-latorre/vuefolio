@@ -1,24 +1,25 @@
 <template>
-  <div class="flex">
+  <div class="inline-block">
     <TextInput
       label="Binary number"
       id="binary"
-      v-on:wrong-input="wrongInput = true"
-      v-on:change="changeValue('binary', $event)"
       :authorizedCars="['0', '1']"
-    />
-    <div>decimal: {{ decimalConv }}</div>
-  </div>
-  <div class="flex mt-1-rem">
+      :value="binary"
+      @update-value="changeValue('binary', $event)"
+    >
+      <template v-slot:append>
+        <i class="ml-2 fas fa-exchange-alt"></i>
+      </template>
+    </TextInput>
     <TextInput
       label="Decimal number"
       id="decimal"
       v-on:wrong-input="wrongInput = true"
-      v-on:change="changeValue('decimal', $event)"
+      :value="decimal"
+      @update-value="changeValue('decimal', $event)"
       :maxWidth="15"
       :authorizedCars="['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']"
     />
-    <div>binary: {{ binaryConv }}</div>
   </div>
   <Message v-if="wrongInput" type="error">Wrong input</Message>
 </template>
@@ -67,14 +68,12 @@ export default {
     },
     changeValue(target, value) {
       this.wrongInput = false;
-      if (typeof value === "string") {
-        this[target] = value;
-        if (target === "binary") {
-          this.decimalConv = this.groupDigit(this.bin2dec(value), 3);
-        }
-        if (target === "decimal") {
-          this.binaryConv = this.groupDigit(this.dec2bin(value), 4, true);
-        }
+      this[target] = value.replaceAll(" ", "");
+      if (target === "binary") {
+        this.decimal = this.groupDigit(this.bin2dec(value), 3);
+      }
+      if (target === "decimal") {
+        this.binary = this.groupDigit(this.dec2bin(value), 4, true);
       }
     },
   },
@@ -85,22 +84,3 @@ export default {
   },
 };
 </script>
-
-<style scoped lang="scss">
-@import "../../css/variables.scss";
-
-.flex {
-  & *:first-child::after {
-    content: "\f30b";
-    font-weight: bold;
-    font-family: "Font Awesome 5 Free";
-    font-size: 1.5rem;
-    margin-left: 1rem;
-  }
-
-  & *:last-child {
-    padding-top: 1.4rem;
-    line-height: 1rem;
-  }
-}
-</style>

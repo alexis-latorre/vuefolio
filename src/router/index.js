@@ -8,6 +8,7 @@ import LogIn from "@/views/user/Login.vue";
 import Bin2dec from "@/views/exercices/beginner/Bin2dec.vue";
 import BorderRadiusEditor from "@/views/exercices/beginner/BorderRadiusEditor.vue";
 import Calculator from "@/views/exercices/beginner/Calculator";
+import CauseEffect from "@/views/exercices/beginner/CauseEffect";
 
 const routes = [
   {
@@ -39,6 +40,11 @@ const routes = [
     path: "/calculator",
     name: "Calculator",
     component: Calculator
+  },
+  {
+    path: "/cause-effect",
+    name: "CauseEffect",
+    component: CauseEffect
   },
   {
     path: "/lab",

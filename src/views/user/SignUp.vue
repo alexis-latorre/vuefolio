@@ -2,42 +2,48 @@
   <form v-if="!user">
     <TextInput
       @input="this.error.message = null"
-      v-on:change="changeValue('username', $event)"
+      :value="username"
+      @update-value="changeValue('username', $event)"
       id="username"
       label="Username"
       class="mr-6 mb-6"
     />
     <TextInput
       @input="this.error.message = null"
-      v-on:change="changeValue('name', $event)"
+      :value="name"
+      @update-value="changeValue('name', $event)"
       id="name"
       label="Name"
       class="mr-6 mb-6"
     />
     <TextInput
       @input="this.error.message = null"
-      v-on:change="changeValue('lastname', $event)"
+      :value="lastname"
+      @update-value="changeValue('lastname', $event)"
       id="lastname"
       label="Lastname"
       class="mr-6 mb-6"
     />
     <TextInput
       @input="this.error.message = null"
-      v-on:change="changeValue('email', $event)"
+      :value="email"
+      @update-value="changeValue('email', $event)"
       id="email"
       label="Email"
       class="mr-6 mb-6"
     />
     <TextInput
       @input="this.error.message = null"
-      v-on:change="changeValue('emailConfirm', $event)"
+      :value="emailConfirm"
+      @update-value="changeValue('emailConfirm', $event)"
       id="emailConfirm"
       label="Confirm Email"
       class="mr-6 mb-6"
     />
     <PasswordInput
       @input="this.error.message = null"
-      v-on:change="changeValue('password', $event)"
+      :value="password"
+      @update-value="changeValue('password', $event)"
       id="password"
       label="Password"
       class="mr-6 mb-6"
@@ -83,8 +89,8 @@ export default {
     Message: Message,
   },
   methods: {
-    changeValue(target, value) {
-      if (typeof value === "string") this[target] = value;
+    changeValue(target, val) {
+      this[target] = val;
     },
     userDoesntExist(callback) {
       db.collection("users")

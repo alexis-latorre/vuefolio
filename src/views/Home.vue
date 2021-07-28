@@ -10,6 +10,9 @@
         <li>
           <router-link to="/calculator">Calculator</router-link>
         </li>
+        <li>
+          <router-link to="/cause-effect">Cause & Effect</router-link>
+        </li>
       </ul>
     </Product>
   </div>

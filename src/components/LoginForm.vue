@@ -6,14 +6,16 @@
       </h3>
       <form class="mb-3-rem">
         <TextInput
-          v-on:change="changeEmailValue"
+          @update-value="changeValue('email', $event)"
+          :value="email"
           id="email"
           label="Email or Username"
           class="mr-6 mb-6"
         />
         <PasswordInput
+          @update-value="changeValue('password', $event)"
+          :value="password"
           id="password"
-          v-on:change="changePasswordValue"
           label="Password"
         />
         <Button class="mt-1-rem mr-1-rem" @click="signIn($event)"
@@ -69,11 +71,8 @@ export default {
     SignUp: SignUp,
   },
   methods: {
-    changeEmailValue(value) {
-      if (typeof value === "string") this.email = value;
-    },
-    changePasswordValue(value) {
-      if (typeof value === "string") this.password = value;
+    changeValue(target, val) {
+      this[target] = val;
     },
     sendSignIn(id, pass) {
       auth

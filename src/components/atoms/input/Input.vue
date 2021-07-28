@@ -5,13 +5,17 @@
   >
     <div class="input">
       <input
-        @input="input"
         :id="id"
         :type="isPassword ? 'password' : isNumber ? 'number' : 'text'"
-        v-model="value"
+        :readonly="readOnly"
+        v-model="val"
+        @input="$emit('update-value', $event.target.value)"
       />
       <label v-if="label" :for="id">{{ label }}</label>
       <span class="append" v-if="append">{{ append }}</span>
+      <span class="append">
+        <slot name="append"></slot>
+      </span>
     </div>
   </div>
 </template>
@@ -19,9 +23,7 @@
 <script>
 export default {
   data() {
-    return {
-      value: "",
-    };
+    return { val: "" };
   },
   props: {
     width: Number,
@@ -32,22 +34,16 @@ export default {
     authorizedCars: Array,
     maxWidth: Number,
     append: String,
+    readOnly: Boolean,
+    value: String,
   },
-  methods: {
-    input() {
-      let valid = true;
-      if (this.$props.maxWidth)
-        this.value = this.value.substr(0, this.$props.maxWidth);
-      if (this.$props.authorizedCars && this.$props.authorizedCars.length > 0) {
-        this.value.split("").forEach((car) => {
-          valid &= this.$props.authorizedCars.indexOf(car) !== -1;
-        });
-      }
-      if (!valid) {
-        this.value = this.value.substring(0, this.value.length - 1);
-        this.$emit("wrong-input");
-      } else this.$emit("change", this.value);
+  watch: {
+    value(val) {
+      this.val = val;
     },
+  },
+  mounted() {
+    this.val = this.$props.value;
   },
 };
 </script>
@@ -125,6 +121,8 @@ $background: lighten($lavander, 8%);
     left: 0.5em;
     padding: 0.1em 0.3em 0.1em 0.3em;
     font-size: 0.8rem;
+  }
+  input[readonly="false"] + label {
     -webkit-animation: slide-down 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
     animation: slide-down 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
   }
@@ -141,7 +139,7 @@ $background: lighten($lavander, 8%);
       color: lighten($color, 25%);
     }
 
-    &:focus {
+    &[readonly="false"]:focus {
       border: solid 2px darken($color, 1%);
       outline: none;
       margin-left: -1px;
