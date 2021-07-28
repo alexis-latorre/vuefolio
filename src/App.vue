@@ -1,5 +1,5 @@
 <template>
-  <div @mousemove="updateMouse($event)">
+  <div>
     <div v-if="debug" id="mouse">Mouse: x={{ mouse.x }}, y={{ mouse.y }}</div>
     <NavBar :links="links" />
     <div class="main">
@@ -60,12 +60,6 @@ export default {
       debug: false,
       user: undefined,
     };
-  },
-  methods: {
-    updateMouse(e) {
-      this.mouse.x = e.pageX;
-      this.mouse.y = e.pageY;
-    },
   },
   mounted() {
     auth.onAuthStateChanged((user) => {
