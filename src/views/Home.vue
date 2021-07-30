@@ -19,6 +19,9 @@
         <li>
           <router-link to="/xmas">Christmas lights</router-link>
         </li>
+        <li>
+          <router-link to="/countdown">Countdown timer</router-link>
+        </li>
       </ul>
     </Product>
   </div>
