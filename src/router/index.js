@@ -9,6 +9,9 @@ import Bin2dec from "@/views/exercices/beginner/Bin2dec.vue";
 import BorderRadiusEditor from "@/views/exercices/beginner/BorderRadiusEditor.vue";
 import Calculator from "@/views/exercices/beginner/Calculator";
 import CauseEffect from "@/views/exercices/beginner/CauseEffect";
+import ChristmasLights from "@/views/exercices/beginner/ChristmasLights";
+import Galaxy from "@/views/Galaxy";
+import Countdown from "@/views/exercices/beginner/Countdown";
 
 const routes = [
   {
@@ -45,6 +48,21 @@ const routes = [
     path: "/cause-effect",
     name: "CauseEffect",
     component: CauseEffect
+  },
+  {
+    path: "/galaxy",
+    name: "Galaxy",
+    component: Galaxy
+  },
+  {
+    path: "/xmas",
+    name: "ChristmasLights",
+    component: ChristmasLights
+  },
+  {
+    path: "/countdown",
+    name: "Countdown",
+    component: Countdown
   },
   {
     path: "/lab",

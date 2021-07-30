@@ -13,6 +13,12 @@
         <li>
           <router-link to="/cause-effect">Cause & Effect</router-link>
         </li>
+        <li>
+          <router-link to="/galaxy">Galaxy</router-link>
+        </li>
+        <li>
+          <router-link to="/xmas">Christmas lights</router-link>
+        </li>
       </ul>
     </Product>
   </div>

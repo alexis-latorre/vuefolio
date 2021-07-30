@@ -119,7 +119,7 @@ $background: lighten($lavander, 8%);
   input + label {
     top: -0.75em;
     left: 0.5em;
-    padding: 0.1em 0.3em 0.1em 0.3em;
+    padding: 0.1em 0.3em 0 0.3em;
     font-size: 0.8rem;
   }
   input[readonly="false"] + label {
