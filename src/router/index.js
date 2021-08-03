@@ -12,6 +12,7 @@ import CauseEffect from "@/views/exercices/beginner/CauseEffect";
 import ChristmasLights from "@/views/exercices/beginner/ChristmasLights";
 import Galaxy from "@/views/Galaxy";
 import Countdown from "@/views/exercices/beginner/Countdown";
+import Quiz from "@/views/Quiz";
 
 const routes = [
   {
@@ -63,6 +64,11 @@ const routes = [
     path: "/countdown",
     name: "Countdown",
     component: Countdown
+  },
+  {
+    path: "/quiz",
+    name: "Quiz",
+    component: Quiz
   },
   {
     path: "/lab",

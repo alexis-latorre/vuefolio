@@ -1,10 +1,12 @@
-import { createApp } from "vue";
-import App from "./App";
+import * as Vue from "vue";
+import axios from "axios";
+import VueAxios from "vue-axios";
 import router from "./router";
-import VueFirestore from "vue-firestore";
+import App from "./App";
 
-let app = createApp(App);
+const app = Vue.createApp(App);
 
-app.use(router, VueFirestore);
+app.use(VueAxios, axios);
+app.use(router);
 
 app.mount("#app");

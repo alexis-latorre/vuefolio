@@ -23,6 +23,7 @@ export default {
         { id: 1, title: "Home", href: "/", icon: "fas fa-home" },
         { id: 2, title: "Draggable", href: "/draggable", icon: "fas fa-list" },
         { id: 3, title: "TODO", href: "/todo", icon: "fas fa-tasks" },
+        { id: 3, title: "Quiz", href: "/quiz", icon: "fas fa-question" },
         { id: 99, title: "Lab", href: "/lab", icon: "fas fa-flask" },
         {
           id: 100,

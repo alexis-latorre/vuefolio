@@ -7,7 +7,7 @@
       :style="'color: ' + (color !== undefined ? color : '')"
     >
       <i v-if="undefined !== leftIcon && !iconOnly" :class="leftIcon"></i>
-      <i v-if="iconOnly" :class="middleIcon"></i>
+      <i v-else-if="iconOnly" :class="middleIcon"></i>
       <slot v-else></slot>
       <i v-if="undefined !== rightIcon && !iconOnly" :class="rightIcon"></i>
       <span class="btn-label">
