@@ -1,6 +1,7 @@
 export const exists = (o) => {
   return o !== undefined && o !== null;
 };
+
 export const shuffle = (array) => {
   var currentIndex = array.length,
     randomIndex;
@@ -19,4 +20,16 @@ export const shuffle = (array) => {
   }
 
   return array;
+};
+
+export const normalize = (str) => {
+  return str
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/\s/g, "-")
+    .replace(/[^a-zA-Z0-9\\-]/g, "")
+    .replace(/-+/g, "-")
+    .replace(/^-/, "")
+    .replace(/-$/, "")
+    .toLowerCase();
 };

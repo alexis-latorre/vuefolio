@@ -1,37 +1,41 @@
 <template>
   <template v-if="questions.length === 0">
-    <p>
-      Select your quiz category
-      <select v-model="currentCategory">
-        <option
-          v-for="category of categories"
-          :key="category.id"
-          :value="category.id"
-        >
-          {{ category.label }}
-        </option>
-      </select>
-    </p>
-    <p>
-      Select your quiz difficulty
-      <select v-model="currentDifficulty">
-        <option
-          v-for="difficulty of difficulties"
-          :key="difficulty.id"
-          :value="difficulty.id"
-        >
-          {{ difficulty.label }}
-        </option>
-      </select>
-    </p>
-    <p>
-      Select how many questions you want
-      <input type="number" v-model="amount" />
-    </p>
-    <p>
-      Select the time you want to answer (between 5 and 30 seconds)
-      <input type="number" v-model="timer" min="5" max="30" step="1" />
-    </p>
+    <SelectInput
+      class="mb-1-rem"
+      id="category"
+      label="Select your quiz category"
+      :options="categories"
+      width="500"
+      v-on:update-value="changeValue('currentCategory', $event)"
+    />
+    <SelectInput
+      class="mb-1-rem"
+      id="difficulty"
+      label="Select your quiz difficulty"
+      :options="difficulties"
+      width="500"
+      v-on:update-value="changeValue('currentDifficulty', $event)"
+    />
+    <NumberInput
+      class="mt-2-rem"
+      id="nbQuestions"
+      label="Select how many questions you want (between 1 and 100)"
+      :value="amount.toString()"
+      :min="1"
+      :max="100"
+      width="500"
+      @update-value="changeValue('amount', $event)"
+    />
+    <NumberInput
+      class="mt-1-rem"
+      id="timerLength"
+      label="Select the time you want to answer (between 5 and 30 seconds)"
+      :min="5"
+      :max="30"
+      width="500"
+      :value="timer.toString()"
+      @update-value="changeValue('timer', $event)"
+    />
     <Button @click="start">Start quiz</Button>
   </template>
   <template v-else-if="!ended">
@@ -63,12 +67,16 @@
 
 <script>
 import Button from "@/components/atoms/Button";
+import SelectInput from "@/components/atoms/input/SelectInput";
+import NumberInput from "@/components/atoms/input/NumberInput";
 import QuizPage from "./QuizPage";
 
 export default {
   components: {
     Button: Button,
     QuizPage: QuizPage,
+    SelectInput: SelectInput,
+    NumberInput: NumberInput,
   },
   data() {
     return {
@@ -77,38 +85,38 @@ export default {
       timer: 15,
       currentCategory: "any",
       categories: [
-        { id: "any", label: "Any Category" },
-        { id: "9", label: "General Knowledge" },
-        { id: "10", label: "Entertainment: Books" },
-        { id: "11", label: "Entertainment: Film" },
-        { id: "12", label: "Entertainment: Music" },
-        { id: "13", label: "Entertainment: Musicals & Theatres" },
-        { id: "14", label: "Entertainment: Television" },
-        { id: "15", label: "Entertainment: Video Games" },
-        { id: "16", label: "Entertainment: Board Games" },
-        { id: "17", label: "Science & Nature" },
-        { id: "18", label: "Science: Computers" },
-        { id: "19", label: "Science: Mathematics" },
-        { id: "20", label: "Mythology" },
-        { id: "21", label: "Sports" },
-        { id: "22", label: "Geography" },
-        { id: "23", label: "History" },
-        { id: "24", label: "Politics" },
-        { id: "25", label: "Art" },
-        { id: "26", label: "Celebrities" },
-        { id: "27", label: "Animals" },
-        { id: "28", label: "Vehicles" },
-        { id: "29", label: "Entertainment: Comics" },
-        { id: "30", label: "Science: Gadgets" },
-        { id: "31", label: "Entertainment: Japanese Anime & Manga" },
-        { id: "32", label: "Entertainment: Cartoon & Animations" },
+        { value: "any", text: "Any Category" },
+        { value: "9", text: "General Knowledge" },
+        { value: "10", text: "Entertainment: Books" },
+        { value: "11", text: "Entertainment: Film" },
+        { value: "12", text: "Entertainment: Music" },
+        { value: "13", text: "Entertainment: Musicals & Theatres" },
+        { value: "14", text: "Entertainment: Television" },
+        { value: "15", text: "Entertainment: Video Games" },
+        { value: "16", text: "Entertainment: Board Games" },
+        { value: "17", text: "Science & Nature" },
+        { value: "18", text: "Science: Computers" },
+        { value: "19", text: "Science: Mathematics" },
+        { value: "20", text: "Mythology" },
+        { value: "21", text: "Sports" },
+        { value: "22", text: "Geography" },
+        { value: "23", text: "History" },
+        { value: "24", text: "Politics" },
+        { value: "25", text: "Art" },
+        { value: "26", text: "Celebrities" },
+        { value: "27", text: "Animals" },
+        { value: "28", text: "Vehicles" },
+        { value: "29", text: "Entertainment: Comics" },
+        { value: "30", text: "Science: Gadgets" },
+        { value: "31", text: "Entertainment: Japanese Anime & Manga" },
+        { value: "32", text: "Entertainment: Cartoon & Animations" },
       ],
       currentDifficulty: "any",
       difficulties: [
-        { id: "any", label: "Any Difficulty" },
-        { id: "easy", label: "Easy" },
-        { id: "medium", label: "Medium" },
-        { id: "hard", label: "Hard" },
+        { value: "any", text: "Any Difficulty" },
+        { value: "easy", text: "Easy" },
+        { value: "medium", text: "Medium" },
+        { value: "hard", text: "Hard" },
       ],
       questions: [],
       currentQuestion: null,
@@ -119,6 +127,9 @@ export default {
     };
   },
   methods: {
+    changeValue(target, value) {
+      this[target] = value;
+    },
     reset() {
       this.questions = [];
       this.currentQuestion = null;
@@ -165,13 +176,16 @@ export default {
               Math.pow(
                 this.difficulties
                   .flatMap((it) => {
-                    return it.label.toLowerCase();
+                    return it.text.toLowerCase();
                   })
                   .indexOf(this.currentQuestion.difficulty),
                 2
               );
           }
           this.validAnswer = answer.answer;
+        })
+        .catch((e) => {
+          console.error(e);
         });
     },
     nextQuestion() {

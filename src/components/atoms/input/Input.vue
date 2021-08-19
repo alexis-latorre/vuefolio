@@ -5,13 +5,13 @@
   >
     <div class="input">
       <input
-        :id="id"
+        :id="identifier"
         :type="isPassword ? 'password' : isNumber ? 'number' : 'text'"
         :readonly="readOnly"
         v-model="val"
         @input="$emit('update-value', $event.target.value)"
       />
-      <label v-if="label" :for="id">{{ label }}</label>
+      <label v-if="label" :for="identifier">{{ label }}</label>
       <span class="append" v-if="append">{{ append }}</span>
       <span class="append">
         <slot name="append"></slot>
@@ -21,12 +21,15 @@
 </template>
 
 <script>
+import { Date } from "core-js";
+import * as common from "@/utils/common";
+
 export default {
   data() {
-    return { val: "" };
+    return { val: "", identifier: "" };
   },
   props: {
-    width: Number,
+    width: String,
     isNumber: Boolean,
     isPassword: Boolean,
     id: String,
@@ -44,6 +47,12 @@ export default {
   },
   mounted() {
     this.val = this.$props.value;
+    if (this.$props.label && undefined === this.$props.id) {
+      this.identifier =
+        "label_" + common.normalize(this.$props.label) + "_" + Date.now();
+    } else {
+      this.identifier = this.$props.id;
+    }
   },
 };
 </script>
@@ -122,7 +131,7 @@ $background: lighten($lavander, 8%);
     padding: 0.1em 0.3em 0 0.3em;
     font-size: 0.8rem;
   }
-  input[readonly="false"] + label {
+  input:not([readonly]) + label {
     -webkit-animation: slide-down 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
     animation: slide-down 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
   }
@@ -139,7 +148,7 @@ $background: lighten($lavander, 8%);
       color: lighten($color, 25%);
     }
 
-    &[readonly="false"]:focus {
+    &:not([readonly]):focus {
       border: solid 2px darken($color, 1%);
       outline: none;
       margin-left: -1px;

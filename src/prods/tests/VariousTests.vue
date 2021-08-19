@@ -1,34 +1,26 @@
+<!-- Don't mind this file, it's my sandbox -->
 <template>
-  <h2>{{ test }}</h2>
-  <TextInput :value="test" @update-value="changeValue($event)" />
-  <button @click="test = 'bonjour'">Change</button>
+  <SelectInput label="SelectInput" :options="options" />
+  <p>{{ selected }}</p>
 </template>
 
 <script>
-import { auth } from "@/firebase";
-import TextInput from "@/components/atoms/input/TextInput";
+import SelectInput from "@/components/atoms/input/SelectInput";
+
 export default {
   components: {
-    TextInput: TextInput,
+    SelectInput: SelectInput,
   },
   data() {
     return {
-      test: "initial",
+      selected: null,
+      options: [
+        { value: "1", text: "Number 1" },
+        { value: "2", text: "Number 2" },
+      ],
     };
   },
-  methods: {
-    changeValue(val) {
-      this.test = val;
-    },
-  },
-  mounted() {
-    auth.onAuthStateChanged((user) => {
-      if (user) {
-        this.user = user;
-      } else {
-        this.user = undefined;
-      }
-    });
-  },
+  methods: {},
+  mounted() {},
 };
 </script>
