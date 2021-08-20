@@ -26,16 +26,6 @@
       width="500"
       @update-value="changeValue('amount', $event)"
     />
-    <NumberInput
-      class="mt-1-rem"
-      id="timerLength"
-      label="Select the time you want to answer (between 5 and 30 seconds)"
-      :min="5"
-      :max="30"
-      width="500"
-      :value="timer.toString()"
-      @update-value="changeValue('timer', $event)"
-    />
     <Button @click="start">Start quiz</Button>
   </template>
   <template v-else-if="!ended">
@@ -49,7 +39,7 @@
       :question="currentQuestion"
       v-on:answer="answer"
       :validAnswer="validAnswer"
-      :timeLimit="timer"
+      :answerId="answerId"
     >
       <Button
         v-if="questions.length === currentQuestion.questionNumber"
@@ -82,7 +72,6 @@ export default {
     return {
       uuid: "",
       amount: 10,
-      timer: 15,
       currentCategory: "any",
       categories: [
         { value: "any", text: "Any Category" },
@@ -124,6 +113,7 @@ export default {
       url: "https://1l74f.sse.codesandbox.io/quiz/",
       validAnswer: null,
       ended: false,
+      answerId: null,
     };
   },
   methods: {
@@ -138,10 +128,6 @@ export default {
       this.ended = false;
     },
     start() {
-      if (this.timer < 5 || this.timer > 30) {
-        console.error("Invalid timer");
-        return;
-      }
       this.reset();
       const queries = [
         `amount=${this.amount}`,
@@ -183,6 +169,7 @@ export default {
               );
           }
           this.validAnswer = answer.answer;
+          this.answerId = obj.answer;
         })
         .catch((e) => {
           console.error(e);
