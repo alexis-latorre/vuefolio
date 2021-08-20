@@ -5,37 +5,12 @@
         <span class="h3__content"> Question #{{ q.questionNumber }} </span>
       </h3>
     </div>
-    <div id="countdown">
-      <div id="countdown-number">
-        {{ Math.round(timer) }}
-      </div>
-      <svg>
-        <circle
-          id="background-circle"
-          :style="`stroke-dasharray: ${timerRadius}px;`"
-          r="40"
-          cx="50"
-          cy="50"
-        ></circle>
-        <circle
-          id="countdown-circle"
-          r="40"
-          cx="50"
-          cy="50"
-          :style="`stroke-dasharray: ${timerRadius}px;
-          stroke-dashoffset: ${
-            timerRadius - timer * (timerRadius / timeLimit)
-          }px;
-          stroke: ${
-            (timer / this.timeLimit) * 100 >= 30
-              ? 'green'
-              : (timer / this.timeLimit) * 100 >= 10
-              ? 'orange'
-              : 'red'
-          }`"
-        ></circle>
-      </svg>
-    </div>
+    <Countdown
+      :startOn="true"
+      :callback="callback"
+      :running="running"
+      :iterator="q.questionNumber"
+    />
   </div>
   <p class="mb-1-rem">
     <i :class="`fas fa-signal ${q.difficulty}`"></i>{{ difficulty }}
@@ -89,6 +64,7 @@
 
 <script>
 import * as Strings from "@/utils/strings";
+import Countdown from "@/components/Countdown";
 
 export default {
   props: {
@@ -96,11 +72,16 @@ export default {
     validAnswer: String,
     answerId: String,
   },
+  components: {
+    Countdown: Countdown,
+  },
   emits: ["answer"],
   data() {
     return {
-      timeLimit: 15,
-      timerRadius: Math.ceil(2 * Math.PI * 40),
+      callback: {
+        func: this.answerQuestion,
+        args: this.$event,
+      },
       style: {
         color: {
           null: "gray",
@@ -125,8 +106,8 @@ export default {
         answers: [],
       },
       canRespond: true,
-      timer: 0,
-      interval: null,
+      running: true,
+      ci: 0,
     };
   },
   methods: {
@@ -137,24 +118,18 @@ export default {
     },
     answerQuestion(evt) {
       if (this.canRespond) {
-        this.$emit("answer", { question: this.q.id, answer: evt.target.value });
+        this.$emit("answer", {
+          question: this.q.id,
+          answer: evt ? evt.target.value : null,
+        });
         this.canRespond = false;
-        clearInterval(this.interval);
+        this.running = false;
       }
     },
     init() {
       this.q = this.$props.question;
       this.canRespond = true;
-      this.timer = this.timeLimit;
-      this.interval = setInterval(() => {
-        this.timer -= 0.01;
-        if (this.timer <= 0) {
-          this.timer = 0;
-          this.canRespond = false;
-          clearInterval(this.interval);
-          this.$emit("answer", { question: this.q.id, answer: null });
-        }
-      }, 10);
+      this.running = true;
     },
   },
   computed: {

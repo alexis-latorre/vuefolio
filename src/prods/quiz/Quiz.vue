@@ -220,11 +220,12 @@ export default {
               2
             );
           this.maxScore += points;
+          const answerGiven = this.currentQuestion.answers.filter((it) => {
+            return obj.answer === it.id;
+          });
           this.stats.push({
             question: this.currentQuestion.question,
-            answerGiven: this.currentQuestion.answers.filter((it) => {
-              return obj.answer === it.id;
-            })[0].label,
+            answerGiven: answerGiven.length > 0 ? answerGiven[0].label : "",
             correctAnswer: this.currentQuestion.answers.filter((it) => {
               return answer.answer === it.id;
             })[0].label,

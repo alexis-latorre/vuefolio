@@ -62,12 +62,15 @@ export default {
     thickness: Number,
     startOn: Boolean,
     callback: {
-      name: String,
+      func: Function,
       args: Object,
     },
+    running: Boolean,
+    iterator: Number,
   },
   methods: {
     init() {
+      clearInterval(this.interval);
       this.timer = this.$props.timeLimit ? this.$props.timeLimit : 10;
       this.interval = setInterval(() => {
         this.timer -= 0.01;
@@ -75,8 +78,10 @@ export default {
           this.timer = 0;
           clearInterval(this.interval);
 
-          if (this.$props.callback && this.$props.callback.args)
-            this.$props.callback.func(this.$props.callback.args);
+          if (this.$props.callback && this.$props.callback.func)
+            this.$props.callback.func(
+              this.$props.callback.args ? this.$props.callback.args : null
+            );
         }
       }, 10);
     },
@@ -89,6 +94,14 @@ export default {
       ? this.$props.thickness
       : Math.round(this.timerRadius / 4);
     if (this.$props.startOn) this.init();
+  },
+  watch: {
+    running() {
+      if (this.$props.running === false) clearInterval(this.interval);
+    },
+    iterator() {
+      this.init();
+    },
   },
 };
 </script>
