@@ -10,13 +10,22 @@
         {{ Math.round(timer) }}
       </div>
       <svg>
-        <circle id="background-circle" r="40" cx="50" cy="50"></circle>
+        <circle
+          id="background-circle"
+          :style="`stroke-dasharray: ${timerRadius}px;`"
+          r="40"
+          cx="50"
+          cy="50"
+        ></circle>
         <circle
           id="countdown-circle"
           r="40"
           cx="50"
           cy="50"
-          :style="`stroke-dashoffset: ${252 - timer * (252 / timeLimit)}px;
+          :style="`stroke-dasharray: ${timerRadius}px;
+          stroke-dashoffset: ${
+            timerRadius - timer * (timerRadius / timeLimit)
+          }px;
           stroke: ${
             (timer / this.timeLimit) * 100 >= 30
               ? 'green'
@@ -91,6 +100,7 @@ export default {
   data() {
     return {
       timeLimit: 15,
+      timerRadius: Math.ceil(2 * Math.PI * 40),
       style: {
         color: {
           null: "gray",
@@ -255,7 +265,6 @@ svg {
 }
 
 #background-circle {
-  stroke-dasharray: 252px;
   stroke-dashoffset: 0px;
   stroke-linecap: round;
   stroke-width: 10px;
@@ -264,7 +273,6 @@ svg {
 }
 
 #countdown-circle {
-  stroke-dasharray: 252px;
   stroke-dashoffset: 0px;
   stroke-linecap: round;
   stroke-width: 10px;

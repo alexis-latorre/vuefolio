@@ -30,7 +30,7 @@
   </template>
   <template v-else-if="!ended">
     <p>
-      <Button :action="true" leftIcon="fas fa-running" :click="reset">
+      <Button :action="true" leftIcon="fas fa-running" :click="goHome">
         Return to menu
       </Button>
     </p>
@@ -50,7 +50,48 @@
     </QuizPage>
   </template>
   <template v-else>
-    <p>Your score: {{ score }}</p>
+    <p>
+      Check your score.
+      <span v-if="maxScore - score === 0">
+        Awesome, you did perfect on this one!
+      </span>
+      <span v-else-if="score / maxScore > 0.74">
+        Good job, you are pretty smart.
+      </span>
+      <span v-else-if="score / maxScore > 0.49">
+        Maybe you can do better next time.
+      </span>
+      <span v-else-if="score / maxScore > 0.09">
+        Keep practicing, you've a long way to beat the quiz.
+      </span>
+      <span v-else>
+        What happened? Try to change the difficulty to improve your good
+        answers.
+      </span>
+    </p>
+    <table class="stats">
+      <tr>
+        <th>Question</th>
+        <th>Given answer</th>
+        <th>Correct answer</th>
+        <th>Question points</th>
+      </tr>
+      <tr
+        v-for="line of stats"
+        :key="line.question"
+        :class="`${line.answerGiven !== line.correctAnswer ? 'in' : ''}correct`"
+      >
+        <td v-html="line.question"></td>
+        <td v-html="line.answerGiven"></td>
+        <td v-html="line.correctAnswer"></td>
+        <td>{{ line.points }}</td>
+      </tr>
+      <tr>
+        <td colspan="2"></td>
+        <th>Total</th>
+        <th>{{ score }} / {{ maxScore }}</th>
+      </tr>
+    </table>
     <Button @click="reset"> Go back to menu </Button>
   </template>
 </template>
@@ -110,24 +151,37 @@ export default {
       questions: [],
       currentQuestion: null,
       score: 0,
+      maxScore: 0,
       url: "https://1l74f.sse.codesandbox.io/quiz/",
       validAnswer: null,
       ended: false,
       answerId: null,
+      stats: [],
     };
   },
   methods: {
     changeValue(target, value) {
       this[target] = value;
     },
+    goHome() {
+      if (window.confirm("Do you really want to leave the quiz?")) {
+        this.reset();
+      }
+    },
     reset() {
       this.questions = [];
       this.currentQuestion = null;
       this.score = 0;
+      this.maxScore = 0;
+      this.stats = [];
       this.validAnswer = null;
       this.ended = false;
     },
     start() {
+      if (this.amount < 1 || this.amount > 100) {
+        this.amount = 10;
+        return;
+      }
       this.reset();
       const queries = [
         `amount=${this.amount}`,
@@ -155,18 +209,30 @@ export default {
         )
         .then((res) => {
           const answer = res.data;
+          const points =
+            3 *
+            Math.pow(
+              this.difficulties
+                .flatMap((it) => {
+                  return it.text.toLowerCase();
+                })
+                .indexOf(this.currentQuestion.difficulty),
+              2
+            );
+          this.maxScore += points;
+          this.stats.push({
+            question: this.currentQuestion.question,
+            answerGiven: this.currentQuestion.answers.filter((it) => {
+              return obj.answer === it.id;
+            })[0].label,
+            correctAnswer: this.currentQuestion.answers.filter((it) => {
+              return answer.answer === it.id;
+            })[0].label,
+            points: points,
+          });
 
           if (answer.validAnswer) {
-            this.score +=
-              3 *
-              Math.pow(
-                this.difficulties
-                  .flatMap((it) => {
-                    return it.text.toLowerCase();
-                  })
-                  .indexOf(this.currentQuestion.difficulty),
-                2
-              );
+            this.score += points;
           }
           this.validAnswer = answer.answer;
           this.answerId = obj.answer;
@@ -187,3 +253,88 @@ export default {
   },
 };
 </script>
+
+<style lang="scss" scoped>
+@import "../../css/variables.scss";
+
+.stats {
+  margin-top: 1rem;
+  $radius: 0.5em;
+  $correct: green;
+  $incorrect: red;
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: 1rem;
+
+  th {
+    font-size: 0.9rem;
+    padding: 0.8em;
+  }
+
+  td {
+    font-size: 0.8rem;
+    padding: 0.6em;
+  }
+
+  th,
+  td {
+    text-align: left;
+    vertical-align: middle;
+    border-left: solid 1px $purple;
+    border-top: solid 1px $purple;
+
+    &:last-child {
+      text-align: center;
+      border-right: solid 1px $purple;
+    }
+  }
+
+  .correct td {
+    color: $correct;
+    background: lighten($correct, 70%);
+  }
+
+  .incorrect td {
+    color: $incorrect;
+    background: lighten($incorrect, 40%);
+  }
+
+  tr:first-child {
+    *:first-child {
+      border-top-left-radius: $radius;
+    }
+    *:nth-last-child(1) {
+      border-top-right-radius: $radius;
+    }
+  }
+
+  tr:last-child {
+    *:first-child {
+      border: none;
+    }
+  }
+
+  tr:nth-last-child(1) {
+    * {
+      border-bottom: solid 1px $purple;
+      border-top: none;
+    }
+    *:nth-child(2) {
+      border-bottom-left-radius: $radius;
+    }
+    *:nth-last-child(1) {
+      border-bottom-right-radius: $radius;
+    }
+  }
+
+  tr:nth-last-child(2) {
+    * {
+      border-bottom: solid 1px $purple;
+    }
+
+    *:first-child {
+      border-bottom-left-radius: $radius;
+    }
+  }
+}
+</style>
