@@ -9,7 +9,7 @@
       :startOn="true"
       :callback="callback"
       :running="running"
-      :iterator="q.questionNumber"
+      :key="question"
     />
   </div>
   <p class="mb-1-rem">

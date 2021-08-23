@@ -32,13 +32,8 @@
         :cy="Math.ceil(timerRadius * 1.25)"
         :style="`stroke-dasharray: ${rad}px;stroke-width: ${strokeThickness}px;
           stroke-dashoffset: ${rad - timer * (rad / timerLimit)}px;
-          stroke: ${
-            (timer / timerLimit) * 100 >= 30
-              ? 'green'
-              : (timer / timerLimit) * 100 >= 10
-              ? 'orange'
-              : 'red'
-          }`"
+          animation-duration: ${timerLimit}s;
+          animation-play-state: ${animRunning ? 'running' : 'paused'}`"
       ></circle>
     </svg>
   </div>
@@ -66,7 +61,6 @@ export default {
       args: Object,
     },
     running: Boolean,
-    iterator: Number,
   },
   methods: {
     init() {
@@ -87,6 +81,7 @@ export default {
     },
   },
   mounted() {
+    this.animRunning = this.$props.running ? this.$props.running : true;
     this.timerLimit = this.$props.timeLimit ? this.$props.timeLimit : 10;
     this.timerRadius = this.$props.radius ? this.$props.radius : 40;
     this.rad = Math.ceil(2 * Math.PI * this.timerRadius);
@@ -98,9 +93,6 @@ export default {
   watch: {
     running() {
       if (this.$props.running === false) clearInterval(this.interval);
-    },
-    iterator() {
-      this.init();
     },
   },
 };
@@ -139,5 +131,28 @@ svg {
   stroke-dashoffset: 0px;
   stroke-linecap: round;
   fill: none;
+  animation: timer-color ease-in;
+  stroke: red;
+}
+
+@keyframes timer-color {
+  0% {
+    stroke: green;
+  }
+  55% {
+    stroke: green;
+  }
+  65% {
+    stroke: orange;
+  }
+  80% {
+    stroke: orange;
+  }
+  90% {
+    stroke: red;
+  }
+  100% {
+    stroke: red;
+  }
 }
 </style>
