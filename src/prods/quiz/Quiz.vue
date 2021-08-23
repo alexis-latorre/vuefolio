@@ -77,11 +77,11 @@
         <th>Question points</th>
       </tr>
       <tr
-        v-for="line of stats"
+        v-for="(line, i) of stats"
         :key="line.question"
         :class="`${line.answerGiven !== line.correctAnswer ? 'in' : ''}correct`"
       >
-        <td v-html="line.question"></td>
+        <td v-html="'#' + (i + 1) + ': ' + line.question"></td>
         <td v-html="line.answerGiven"></td>
         <td v-html="line.correctAnswer"></td>
         <td>{{ line.points }}</td>
@@ -301,6 +301,7 @@ export default {
   }
 
   tr:first-child {
+    background: #fafafa;
     *:first-child {
       border-top-left-radius: $radius;
     }
@@ -322,9 +323,11 @@ export default {
     }
     *:nth-child(2) {
       border-bottom-left-radius: $radius;
+      background: #fafafa;
     }
     *:nth-last-child(1) {
       border-bottom-right-radius: $radius;
+      background: #fafafa;
     }
   }
 
