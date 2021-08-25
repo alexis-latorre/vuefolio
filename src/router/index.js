@@ -13,6 +13,7 @@ import ChristmasLights from "@/views/exercices/beginner/ChristmasLights";
 import Galaxy from "@/views/Galaxy";
 import Countdown from "@/views/exercices/beginner/Countdown";
 import Quiz from "@/views/Quiz";
+import Battleships from "@/views/Battleships";
 
 const routes = [
   {
@@ -69,6 +70,11 @@ const routes = [
     path: "/quiz",
     name: "Quiz",
     component: Quiz
+  },
+  {
+    path: "/battleships",
+    name: "Battleships",
+    component: Battleships
   },
   {
     path: "/lab",
