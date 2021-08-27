@@ -1,4 +1,7 @@
 <template>
+  <h2 class="mb-2-rem" :style="`color: ${game.players[currentPlayer].color}`">
+    {{ game.players[currentPlayer].name }}'s turn
+  </h2>
   <div class="main-container">
     <div id="grid-container">
       <div v-if="ended" id="end-screen">
@@ -10,7 +13,7 @@
           <div v-for="i in 10" :key="i" class="cell">{{ i }}</div>
         </div>
         <div v-for="(row, i) of grid" :key="row" class="row">
-          <div class="cell">{{ letters[i] }}</div>
+          <div class="cell">{{ String.fromCharCode(65 + i) }}</div>
           <div
             v-for="(cell, j) of row"
             :key="cell"
@@ -24,7 +27,11 @@
                 : 'hit'
             }`"
           >
-            <a v-if="!ended" @click="strike(j, i)">&nbsp;</a>
+            <a
+              v-if="!ended && cell === '*'"
+              @click="strike(j, i, currentPlayer)"
+              >&nbsp;</a
+            >
             <template v-else>&nbsp;</template>
           </div>
         </div>
@@ -49,15 +56,20 @@ export default {
     return {
       bgeGame: null,
       grid: null,
+      grid1: null,
+      grid2: null,
       stats: null,
+      stats1: null,
+      stats2: null,
       coordinates: "",
       canStrike: true,
       ended: false,
-      letters: ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"],
+      currentPlayer: 0,
     };
   },
   props: {
     game: Object,
+    id: String,
   },
   emits: ["end"],
   methods: {
@@ -66,15 +78,24 @@ export default {
     },
     init() {
       this.axios
-        .get(`${this.bgeGame.url}/ui-grid/${this.bgeGame.grid}`)
+        .get(`${this.bgeGame.url}/ui-grid/${this.bgeGame.grid.player1}`)
         .then((res) => {
-          this.grid = res.data.grid;
+          this.grid1 = res.data.grid;
+          this.grid = this.grid1;
         });
+      if (this.game.nbPlayers === 2) {
+        this.axios
+          .get(`${this.bgeGame.url}/ui-grid/${this.bgeGame.grid.player2}`)
+          .then((res) => {
+            this.grid2 = res.data.grid;
+          });
+      }
     },
-    strike(x, y) {
+    strike(x, y, player) {
       if (!this.canStrike) return;
       this.canStrike = false;
       const payload = {
+        player: player,
         x: x,
         y: y,
       };
@@ -87,6 +108,47 @@ export default {
 
           if (this.ended) {
             this.$emit("end");
+            return;
+          }
+
+          if (this.game.nbPlayers === 2) {
+            if (this.currentPlayer === 0) {
+              this.grid1 = res.data.grid;
+              this.grid = this.grid1;
+              this.stats1 = res.data.stats;
+              this.stats = this.stats1;
+
+              if (!res.data.hit) {
+                setTimeout(() => {
+                  this.grid = this.grid2;
+                  this.stats = this.stats2;
+                  this.currentPlayer = 1;
+                  this.coordinates = "";
+                  this.canStrike = true;
+                }, 1000);
+              } else {
+                this.coordinates = "";
+                this.canStrike = true;
+              }
+            } else {
+              this.grid2 = res.data.grid;
+              this.grid = this.grid2;
+              this.stats2 = res.data.stats;
+              this.stats = this.stats2;
+
+              if (!res.data.hit) {
+                setTimeout(() => {
+                  this.grid = this.grid1;
+                  this.stats = this.stats1;
+                  this.currentPlayer = 0;
+                  this.coordinates = "";
+                  this.canStrike = true;
+                }, 1000);
+              } else {
+                this.coordinates = "";
+                this.canStrike = true;
+              }
+            }
           } else {
             this.coordinates = "";
             this.canStrike = true;
