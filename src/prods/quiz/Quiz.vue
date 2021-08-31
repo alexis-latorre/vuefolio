@@ -152,7 +152,7 @@ export default {
       currentQuestion: null,
       score: 0,
       maxScore: 0,
-      url: "https://1l74f.sse.codesandbox.io/quiz/",
+      url: "https://wl1th.sse.codesandbox.io/quiz/",
       validAnswer: null,
       ended: false,
       answerId: null,

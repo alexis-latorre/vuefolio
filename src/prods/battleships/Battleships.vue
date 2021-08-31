@@ -78,7 +78,7 @@ export default {
   },
   data() {
     return {
-      url: "https://1l74f.sse.codesandbox.io/battleships",
+      url: "https://wl1th.sse.codesandbox.io/battleships",
       gameModeLabels: ["Solo", "Hot seat", "Versus AI"],
       game: null,
       loading: false,
@@ -104,14 +104,18 @@ export default {
       this.game = null;
       this.loading = true;
       const payload = {
-        nbPlayers: this.gameMode === 0 ? 1 : 2,
+        nbPlayers: this.gameMode === 0 ? 1 : this.versusMode === 0 ? 2 : 1,
+        versusAI: this.versusMode === 1,
       };
       this.axios.post(`${this.url}/start-game`, payload).then((res) => {
         this.game = res.data;
+        this.game.ai = this.versusMode === 1;
         this.game.url = this.url;
         this.game.players = [{ name: this.player1, color: "blue" }];
         if (payload.nbPlayers === 2)
           this.game.players.push({ name: this.player2, color: "red" });
+        else if (this.game.ai)
+          this.game.players.push({ name: "Opponent", color: "red" });
         this.loading = false;
       });
     },

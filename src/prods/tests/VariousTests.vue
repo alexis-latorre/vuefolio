@@ -1,36 +1,62 @@
 <!-- Don't mind this file, it's my sandbox -->
 <template>
-  <Countdown
-    :timeLimit="10"
-    :radius="100"
-    :startOn="true"
-    :callback="callback"
-  />
+  <div id="mouse-container" @mousemove="updateMouse($event)">
+    <div
+      @mousemove="prevent($event)"
+      id="mouse-position"
+      :style="`left: ${mousePosition.x}; top: ${mousePosition.y}`"
+    >
+      {{ position }}
+    </div>
+  </div>
 </template>
 
 <script>
-import Countdown from "@/components/Countdown";
-
 export default {
   data() {
     return {
-      callback: {
-        func: this.tadam,
-        name: "tadam",
-        args: {
-          name: "World",
-          text: "Hello, %s!",
-        },
+      position: "0 : 0",
+      mousePosition: {
+        x: "50%",
+        y: "50%",
       },
     };
   },
   methods: {
-    tadam(args) {
-      console.log(args.text.replace("%s", args.name));
+    prevent(evt) {
+      evt.preventDefault();
     },
-  },
-  components: {
-    Countdown: Countdown,
+    updateMouse(evt) {
+      this.position = `${evt.offsetX} : ${evt.offsetY}`;
+      this.mousePosition.x = `${evt.offsetX - 90}px`;
+      this.mousePosition.y = `${evt.offsetY - 40}px`;
+
+      this.axios
+        .post("https://1l74f.sse.codesandbox.io/mouse", {
+          x: evt.offsetX,
+          y: evt.offsetY,
+        })
+        .then();
+    },
   },
 };
 </script>
+
+<style scoped>
+#mouse-container {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1/1;
+  border: solid 1px silver;
+}
+#mouse-position {
+  position: absolute;
+  min-width: 70px;
+  text-align: center;
+  background: darkmagenta;
+  font-size: 0.8rem;
+  color: white;
+  border: solid 1px silver;
+  padding: 0.5em;
+}
+</style>

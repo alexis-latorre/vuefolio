@@ -3,6 +3,7 @@ import Home from "@/views/Home.vue";
 import Draggable from "@/views/Draggable.vue";
 import Todo from "@/views/Todo_1_1_0.vue";
 import Tests from "@/views/Tests.vue";
+import TestsOtherInstance from "@/views/TestsOtherInstance.vue";
 import SignUp from "@/views/user/SignUp.vue";
 import LogIn from "@/views/user/Login.vue";
 import Bin2dec from "@/views/exercices/beginner/Bin2dec.vue";
@@ -80,6 +81,11 @@ const routes = [
     path: "/lab",
     name: "Tests",
     component: Tests
+  },
+  {
+    path: "/lab2",
+    name: "Tests2",
+    component: TestsOtherInstance
   },
   {
     path: "/signup",
