@@ -78,7 +78,7 @@ export default {
   },
   data() {
     return {
-      url: "https://wl1th.sse.codesandbox.io/battleships",
+      url: `${this.$backendUrl}/battleships`,
       gameModeLabels: ["Solo", "Hot seat", "Versus AI"],
       game: null,
       loading: false,

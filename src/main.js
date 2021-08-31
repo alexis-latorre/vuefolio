@@ -5,6 +5,7 @@ import router from "./router";
 import App from "./App";
 
 const app = Vue.createApp(App);
+app.config.globalProperties.$backendUrl = "https://wl1th.sse.codesandbox.io";
 
 app.use(VueAxios, axios);
 app.use(router);

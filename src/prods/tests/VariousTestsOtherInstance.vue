@@ -13,11 +13,12 @@ export default {
         x: "50%",
         y: "50%",
       },
+      url: `${this.$backendUrl}/mouse`,
     };
   },
   methods: {
     getMouse() {
-      this.axios.get("https://1l74f.sse.codesandbox.io/mouse").then((res) => {
+      this.axios.get(this.url).then((res) => {
         this.mouse.x = res.data.x + "px";
         this.mouse.y = res.data.y + "px";
         this.getMouse();

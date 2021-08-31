@@ -20,6 +20,7 @@ export default {
         x: "50%",
         y: "50%",
       },
+      url: `${this.$backendUrl}/mouse`,
     };
   },
   methods: {
@@ -32,7 +33,7 @@ export default {
       this.mousePosition.y = `${evt.offsetY - 40}px`;
 
       this.axios
-        .post("https://1l74f.sse.codesandbox.io/mouse", {
+        .post(this.url, {
           x: evt.offsetX,
           y: evt.offsetY,
         })
