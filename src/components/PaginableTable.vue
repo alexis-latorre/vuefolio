@@ -1,0 +1,275 @@
+<template>
+  <table>
+    <tr>
+      <th v-for="header of dataModel.headers" :key="header">
+        {{ header.label }}
+      </th>
+    </tr>
+    <tr v-for="entry of selectedModel" :key="entry">
+      <td v-for="data of filtered(entry)" :key="data">{{ data }}</td>
+    </tr>
+  </table>
+  <div>
+    <div>
+      <SelectInput
+        id="ipp"
+        label="Items per page"
+        :options="ippList"
+        :defaultValue="itemsPerPage.toString()"
+        width="150"
+        v-on:update-value="changeValue('itemsPerPage', $event)"
+      />
+    </div>
+    <div class="mt-1-rem mb-2-rem">
+      <a
+        :class="`pagination light${pageNumber === 1 ? ' disabled' : ''}`"
+        @click="pageNumber = pageNumber !== 1 ? 1 : pageNumber"
+      >
+        <i class="fas fa-angle-double-left"></i>
+      </a>
+      <a
+        :class="`pagination light${pageNumber === 1 ? ' disabled' : ''}`"
+        @click="pageNumber !== 1 ? pageNumber-- : pageNumber"
+      >
+        <i class="fas fa-chevron-left"></i>
+      </a>
+      <div style="display: inline-block; width: 300px; text-align: center">
+        <template v-if="Math.ceil(dataModel.data.length / itemsPerPage) < 7">
+          <template
+            v-for="i in Math.ceil(dataModel.data.length / itemsPerPage)"
+            :key="i"
+          >
+            <a
+              @click="pageNumber = i"
+              :class="`pagination ${pageNumber === i ? 'selected' : ''}`"
+              >{{ i }}</a
+            >
+          </template>
+        </template>
+        <template v-else>
+          <template v-if="pageNumber < 3">
+            <template v-for="i of range(1, pageNumber + 1)" :key="i">
+              <a
+                @click="pageNumber = i"
+                :class="`pagination ${pageNumber === i ? 'selected' : ''}`"
+              >
+                {{ i }}
+              </a>
+            </template>
+            <span @click="selectPage" class="pagination">...</span>
+            <a @click="pageNumber = nbPages" class="pagination">{{
+              nbPages
+            }}</a>
+          </template>
+          <template v-else-if="pageNumber > nbPages - 3">
+            <a @click="pageNumber = 1" class="pagination"> 1 </a>
+            <span @click="selectPage" class="pagination">...</span>
+            <template v-for="i of range(pageNumber - 1, nbPages)" :key="i">
+              <a
+                @click="pageNumber = i"
+                :class="`pagination ${pageNumber === i ? 'selected' : ''}`"
+              >
+                {{ i }}
+              </a>
+            </template>
+          </template>
+          <template v-else>
+            <a @click="pageNumber = 1" class="pagination"> 1 </a>
+            <span v-if="pageNumber > 3" @click="selectPage" class="pagination"
+              >...</span
+            >
+            <template
+              v-for="i of range(pageNumber - 1, pageNumber + 1)"
+              :key="i"
+            >
+              <a
+                @click="pageNumber = i"
+                :class="`pagination ${pageNumber === i ? 'selected' : ''}`"
+              >
+                {{ i }}
+              </a>
+            </template>
+            <span @click="selectPage" class="pagination">...</span>
+            <a @click="pageNumber = nbPages" class="pagination">{{
+              nbPages
+            }}</a>
+          </template>
+        </template>
+      </div>
+      <a
+        :class="`pagination light${pageNumber === nbPages ? ' disabled' : ''}`"
+        @click="pageNumber !== nbPages ? pageNumber++ : pageNumber"
+      >
+        <i class="fas fa-chevron-right"></i>
+      </a>
+      <a
+        :class="`pagination light${pageNumber === nbPages ? ' disabled' : ''}`"
+        @click="pageNumber = pageNumber !== nbPages ? nbPages : pageNumber"
+      >
+        <i class="fas fa-angle-double-right"></i>
+      </a>
+    </div>
+  </div>
+</template>
+
+<script>
+import SelectInput from "@/components/atoms/input/SelectInput";
+
+export default {
+  components: {
+    SelectInput,
+  },
+  data() {
+    return {
+      ippList: [
+        { value: -1, text: "All" },
+        { value: 5, text: "5" },
+        { value: 10, text: "10" },
+        { value: 25, text: "25" },
+        { value: 50, text: "50" },
+        { value: 100, text: "100" },
+      ],
+      itemsPerPage: 10,
+      pageNumber: 1,
+    };
+  },
+  props: {
+    dataModel: Object,
+  },
+  methods: {
+    selectPage() {
+      const page = window.prompt("Aller à la page...");
+
+      if (!isNaN(page) && page > 0 && page < this.nbPages + 1) {
+        this.pageNumber = parseInt(page, 10);
+      }
+    },
+    range(from, to) {
+      const r = [];
+
+      for (let i = from; i < to + 1; i++) {
+        r.push(i);
+      }
+      return r;
+    },
+    changeValue(target, value) {
+      if (target === "itemsPerPage" && value === -1) {
+        this.itemsPerPage = this.$props.dataModel.data.length;
+        return;
+      }
+      this[target] = value;
+    },
+    filtered(entry) {
+      const entries = [];
+      this.$props.dataModel.headers.forEach((header) => {
+        if (undefined !== entry[header.bind]) {
+          entries.push(entry[header.bind]);
+        }
+      });
+      return entries;
+    },
+  },
+  computed: {
+    nbPages() {
+      return Math.ceil(this.$props.dataModel.data.length / this.itemsPerPage);
+    },
+    selectedModel() {
+      return this.$props.dataModel.data.filter((entry, i) => {
+        if (
+          (this.pageNumber - 1) * this.itemsPerPage >
+          this.$props.dataModel.data.length
+        ) {
+          this.pageNumber = 1;
+          i = 0;
+        }
+        return (
+          i >= this.itemsPerPage * (this.pageNumber - 1) &&
+          i < this.itemsPerPage * (this.pageNumber - 1) + this.itemsPerPage
+        );
+      });
+    },
+  },
+};
+</script>
+
+<style scoped lang="scss">
+@import "../css/variables.scss";
+
+table {
+  margin-bottom: 2rem;
+}
+th,
+td {
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-top: 0.2rem;
+  padding-bottom: 0.2rem;
+}
+
+.pagination {
+  user-select: none;
+  display: inline-block;
+  font-size: 16px;
+  padding-top: 8px;
+  padding-left: 4px;
+  padding-right: 4px;
+  height: 24px;
+  min-width: 24px;
+  border: solid 1px $purple;
+  text-align: center;
+  margin-right: -1px;
+  cursor: pointer;
+  color: $purple;
+
+  &:first-child {
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+  }
+
+  &:last-child {
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+  }
+
+  &:hover {
+    background: lighten($purple, 40%);
+  }
+}
+
+.selected {
+  font-weight: bold;
+  background: $purple;
+  color: white;
+
+  &:hover {
+    background: $purple;
+  }
+}
+
+.relative {
+  position: relative;
+  height: 70px;
+}
+
+.absolute {
+  position: absolute;
+  bottom: 0;
+
+  &:last-child {
+    left: 50%;
+  }
+}
+.disabled {
+  cursor: not-allowed;
+  color: gray;
+
+  &:hover {
+    background: none;
+  }
+}
+
+.light {
+  border: none;
+  border-radius: 50% !important;
+}
+</style>

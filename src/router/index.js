@@ -15,6 +15,7 @@ import Galaxy from "@/views/Galaxy";
 import Countdown from "@/views/exercices/beginner/Countdown";
 import Quiz from "@/views/Quiz";
 import Battleships from "@/views/Battleships";
+import Budget from "@/views/Budget";
 
 const routes = [
   {
@@ -76,6 +77,11 @@ const routes = [
     path: "/battleships",
     name: "Battleships",
     component: Battleships
+  },
+  {
+    path: "/budget",
+    name: "Budget",
+    component: Budget
   },
   {
     path: "/lab",
