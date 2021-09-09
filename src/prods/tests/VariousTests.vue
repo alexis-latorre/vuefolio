@@ -90,7 +90,13 @@ export default {
       xmlNodes: [{ name: "FLUXNORMALISE", children: [] }],
       dataModel: {
         headers: [
-          { label: "Description", bind: "description" },
+          {
+            label: "Description",
+            bind: "description",
+            format: (v) => {
+              return `_${v}_`;
+            },
+          },
           { label: "Quantity", bind: "quantity" },
           { label: "Price", bind: "price" },
         ],

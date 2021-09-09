@@ -78,7 +78,7 @@
       </p>
     </div>
   </div>
-  <Button @click="clear">STOP</Button>
+  <button @click="clear">STOP</button>
 </template>
 
 <script>

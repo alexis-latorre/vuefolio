@@ -256,14 +256,44 @@ export default {
           console.error("Error getting bank document:", error);
         });
     },
+    cssTable() {
+      return `border-collapse: collapse;`;
+    },
+    cssTh() {
+      return {
+        last: `border-right: none; border-bottom: solid 1px #ccc;`,
+        default: `border-right: solid 1px #ccc; border-bottom: solid 1px #ccc;`,
+      };
+    },
+    cssTd() {
+      return {
+        first: `cursor: pointer; border-right: solid 1px #ccc; border-bottom: solid 1px #eee;`,
+        last: `cursor: pointer; border-right: none; border-bottom: solid 1px #eee;`,
+        default: `cursor: pointer; border-right: solid 1px #ccc; border-bottom: solid 1px #eee;`,
+      };
+    },
+    cssTrTd() {
+      return {
+        hover: `this.style.background = "#eee";`,
+        out: `this.style.background = "none";`,
+      };
+    },
   },
   computed: {
     dataModel() {
       return {
+        options: {
+          css: {
+            table: this.cssTable(),
+            th: this.cssTh(),
+            td: this.cssTd(),
+            trtd: this.cssTrTd(),
+          },
+        },
         headers: [
-          { label: "Date", bind: "date" },
+          { label: "Date", bind: "date", format: this.prettyDate },
           { label: "Catégorie", bind: "category" },
-          { label: "Montant", bind: "amount" },
+          { label: "Montant", bind: "amount", format: this.currency },
         ],
         data: this.filteredEntries,
       };

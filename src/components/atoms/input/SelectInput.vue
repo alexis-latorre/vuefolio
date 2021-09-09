@@ -1,13 +1,18 @@
 <template>
-  <div
-    class="input__container mt-1-rem mr-2-rem"
-    :style="`width: ${width ? width : 300}px`"
-  >
+  <div class="input__container mt-1-rem mr-2-rem">
     <div class="input">
-      <label v-if="label" class="inline-block mb-2" :for="identifier">{{
-        label
-      }}</label>
-      <select v-model="selected" @change="select">
+      <label
+        :style="`width: ${width ? width : 300}px`"
+        v-if="label"
+        class="block mb-2"
+        :for="identifier"
+        >{{ label }}</label
+      >
+      <select
+        :style="`width: ${width ? width + 'px' : 'auto'}`"
+        v-model="selected"
+        @change="select"
+      >
         <template v-for="option of options" :key="option">
           <option selected :value="option.value">
             {{ option.text }}

@@ -1,12 +1,179 @@
 <template>
-  <table>
+  <table
+    :style="`display: block; min-height: ${
+      ((this.$props.dataModel.data.length < itemsPerPage
+        ? this.$props.dataModel.data.length
+        : itemsPerPage) +
+        2) *
+      24
+    }px;${
+      dataModel.options && dataModel.options.css && dataModel.options.css.table
+        ? dataModel.options.css.table
+        : ''
+    }`"
+  >
     <tr>
-      <th v-for="header of dataModel.headers" :key="header">
-        {{ header.label }}
-      </th>
+      <template v-for="(header, i) of dataModel.headers" :key="header">
+        <template
+          v-if="
+            dataModel.options &&
+            dataModel.options.css &&
+            dataModel.options.css.th &&
+            dataModel.options.css.th.default
+          "
+        >
+          <template v-if="dataModel.options.css.th.first && i === 0">
+            <th
+              :style="`${
+                dataModel.options.css
+                  ? dataModel.options.css.th
+                    ? dataModel.options.css.th.first
+                    : ''
+                  : ''
+              }`"
+            >
+              {{ header.label }}
+            </th>
+          </template>
+          <template
+            v-else-if="
+              dataModel.options.css.th.last &&
+              i === dataModel.headers.length - 1
+            "
+          >
+            <th
+              :style="`${
+                dataModel.options.css
+                  ? dataModel.options.css.th
+                    ? dataModel.options.css.th.last
+                    : ''
+                  : ''
+              }`"
+            >
+              {{ header.label }}
+            </th>
+          </template>
+          <template v-else>
+            <th
+              :style="`${
+                dataModel.options.css
+                  ? dataModel.options.css.th
+                    ? dataModel.options.css.th.default
+                    : ''
+                  : ''
+              }`"
+            >
+              {{ header.label }}
+            </th>
+          </template>
+        </template>
+        <th v-else>{{ header.label }}</th>
+      </template>
     </tr>
-    <tr v-for="entry of selectedModel" :key="entry">
-      <td v-for="data of filtered(entry)" :key="data">{{ data }}</td>
+    <tr
+      v-for="entry of selectedModel"
+      :key="entry"
+      :onmouseover="
+        dataModel.options &&
+        dataModel.options.css &&
+        dataModel.options.css.trtd &&
+        dataModel.options.css.trtd.hover
+          ? dataModel.options.css.trtd.hover
+          : ''
+      "
+      :onmouseout="
+        dataModel.options &&
+        dataModel.options.css &&
+        dataModel.options.css.trtd &&
+        dataModel.options.css.trtd.out
+          ? dataModel.options.css.trtd.out
+          : ''
+      "
+    >
+      <template v-for="(data, i) of filtered(entry)" :key="data">
+        <template
+          v-if="
+            dataModel.options &&
+            dataModel.options.css &&
+            dataModel.options.css.td &&
+            dataModel.options.css.td.default
+          "
+        >
+          <template v-if="dataModel.options.css.td.first && i === 0">
+            <td
+              :style="dataModel.options.css.td.first"
+              :onmouseover="
+                dataModel.options.css.td.hover
+                  ? dataModel.options.css.td.hover
+                  : ''
+              "
+              :onmouseout="
+                dataModel.options.css.td.out ? dataModel.options.css.td.out : ''
+              "
+            >
+              <template v-if="dataModel.headers[i].format">
+                {{ dataModel.headers[i].format(data) }}
+              </template>
+              <template v-else>
+                {{ data }}
+              </template>
+            </td>
+          </template>
+          <template
+            v-else-if="
+              dataModel.options.css.td.last &&
+              i === dataModel.headers.length - 1
+            "
+          >
+            <td
+              :style="dataModel.options.css.td.last"
+              :onmouseover="
+                dataModel.options.css.td.hover
+                  ? dataModel.options.css.td.hover
+                  : ''
+              "
+              :onmouseout="
+                dataModel.options.css.td.out ? dataModel.options.css.td.out : ''
+              "
+            >
+              <template v-if="dataModel.headers[i].format">
+                {{ dataModel.headers[i].format(data) }}
+              </template>
+              <template v-else>
+                {{ data }}
+              </template>
+            </td>
+          </template>
+          <template v-else>
+            <td
+              :style="dataModel.options.css.td.default"
+              :onmouseover="
+                dataModel.options.css.td.hover
+                  ? dataModel.options.css.td.hover
+                  : ''
+              "
+              :onmouseout="
+                dataModel.options.css.td.out ? dataModel.options.css.td.out : ''
+              "
+            >
+              <template v-if="dataModel.headers[i].format">
+                {{ dataModel.headers[i].format(data) }}
+              </template>
+              <template v-else>
+                {{ data }}
+              </template>
+            </td>
+          </template>
+        </template>
+        <td v-else>
+          <template v-if="dataModel.headers[i].format">
+            {{ dataModel.headers[i].format(data) }}
+          </template>
+          <template v-else>
+            {{ data }}
+          </template>
+        </td>
+      </template>
     </tr>
   </table>
   <div>
@@ -16,7 +183,6 @@
         label="Items per page"
         :options="ippList"
         :defaultValue="itemsPerPage.toString()"
-        width="150"
         v-on:update-value="changeValue('itemsPerPage', $event)"
       />
     </div>
@@ -200,6 +366,7 @@ table {
 }
 th,
 td {
+  text-align: left;
   padding-left: 1rem;
   padding-right: 1rem;
   padding-top: 0.2rem;
