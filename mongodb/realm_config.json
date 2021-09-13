@@ -1,0 +1,8 @@
+{
+    "app_id": "vuefolio-db-lwmto",
+    "config_version": 20210101,
+    "name": "vuefolio-db",
+    "location": "DE-FF",
+    "deployment_model": "LOCAL",
+    "environment": "development"
+}
