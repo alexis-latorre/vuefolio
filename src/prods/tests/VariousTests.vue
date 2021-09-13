@@ -1,6 +1,11 @@
 <!-- Don't mind this file, it's my sandbox -->
 <template>
   <Tabs :tabsProps="tabs">
+    <template v-slot:tab_5>
+      <h3>Random names generator</h3>
+      <Button @click="generate">Generate</Button>
+      <PaginableTable :dataModel="names" />
+    </template>
     <template v-slot:tab_1
       ><button @click="increment">Increment</button></template
     >
@@ -61,8 +66,8 @@ import Button from "@/components/atoms/Button";
 
 export default {
   components: {
-    Tabs: Tabs,
-    PaginableTable: PaginableTable,
+    Tabs,
+    PaginableTable,
     Button,
   },
   data() {
@@ -70,8 +75,9 @@ export default {
       tabs: [
         { name: "tab_1", title: "Tab 1", selected: false },
         { name: "tab_2", title: "Tab 2", selected: false },
-        { name: "tab_3", title: "Tab 3", selected: true },
+        { name: "tab_3", title: "Tab 3", selected: false },
         { name: "tab_4", title: "XSD", selected: false },
+        { name: "tab_5", title: "Namegen", selected: true },
       ],
       importData: "Paste",
       nodes: [
@@ -288,9 +294,49 @@ export default {
           },
         ],
       },
+      names: {
+        headers: [
+          {
+            label: "Lastname",
+            bind: "lastname",
+            format: (v) => {
+              return v.substr(0, 1) + v.substr(1).toLowerCase();
+            },
+          },
+          {
+            label: "Firstname",
+            bind: "firstname",
+            format: (v) => {
+              return v.substr(0, 1) + v.substr(1).toLowerCase();
+            },
+          },
+          {
+            label: "Gender",
+            bind: "gender",
+            format: (v) => {
+              if (v === "M") return "♂️";
+              else return "♀️";
+            },
+          },
+        ],
+        data: [],
+      },
+      namegen: `${this.$backendUrl}/rng/namegen`,
     };
   },
   methods: {
+    generate() {
+      this.axios.get(`${this.namegen}?count=10`).then((r) => {
+        this.names.data = [];
+        r.data.forEach((person) => {
+          this.names.data.push({
+            firstname: person.firstname,
+            lastname: person.surname,
+            gender: person.gender,
+          });
+        });
+      });
+    },
     parseData() {
       this.importData.split("\n").forEach((line) => {
         const parts = line.split(".");

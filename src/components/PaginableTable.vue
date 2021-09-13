@@ -101,7 +101,7 @@
         >
           <template v-if="dataModel.options.css.td.first && i === 0">
             <td
-              :style="dataModel.options.css.td.first"
+              :style="`${dataModel.options.css.td.default} ${dataModel.options.css.td.first}`"
               :onmouseover="
                 dataModel.options.css.td.hover
                   ? dataModel.options.css.td.hover
@@ -126,7 +126,7 @@
             "
           >
             <td
-              :style="dataModel.options.css.td.last"
+              :style="`${dataModel.options.css.td.default} ${dataModel.options.css.td.last}`"
               :onmouseover="
                 dataModel.options.css.td.hover
                   ? dataModel.options.css.td.hover

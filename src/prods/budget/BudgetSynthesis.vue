@@ -261,20 +261,19 @@ export default {
     },
     cssTh() {
       return {
-        last: `border-right: none; border-bottom: solid 1px #ccc;`,
+        last: `border-right: none; border-bottom: solid 1px #ccc; text-align: right;`,
         default: `border-right: solid 1px #ccc; border-bottom: solid 1px #ccc;`,
       };
     },
     cssTd() {
       return {
-        first: `cursor: pointer; border-right: solid 1px #ccc; border-bottom: solid 1px #eee;`,
-        last: `cursor: pointer; border-right: none; border-bottom: solid 1px #eee;`,
-        default: `cursor: pointer; border-right: solid 1px #ccc; border-bottom: solid 1px #eee;`,
+        last: `border-right: none; text-align: right;`,
+        default: `cursor: pointer; border-right: solid 1px #ccc; border-top: solid 1px #eee;`,
       };
     },
     cssTrTd() {
       return {
-        hover: `this.style.background = "#eee";`,
+        hover: `this.style.background = "#fafafa";`,
         out: `this.style.background = "none";`,
       };
     },
