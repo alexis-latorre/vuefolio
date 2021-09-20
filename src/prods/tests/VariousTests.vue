@@ -1,25 +1,16 @@
 <!-- Don't mind this file, it's my sandbox -->
 <template>
   <Tabs :tabsProps="tabs">
+    <template v-slot:tab_6>
+      <h3>Random people generator</h3>
+      <SLPeople />
+    </template>
     <template v-slot:tab_5>
       <h3>Random names generator</h3>
-      <Button @click="generate">Generate</Button>
       <Button @click="generateRelatives">Generate relatives</Button>
       <div id="familyTree-container">
         <canvas id="familyTree" height="0"></canvas>
-        <!-- div class="generation" v-for="i of getGenerations()" :key="i">
-          <div
-            class="person"
-            v-for="person of getFamilyTree(getGenerations().length - (i + 1))"
-            :key="person.id"
-          >
-            <span class="name">
-              {{ person.firstname }} {{ person.surname }}
-            </span>
-          </div>
-        </div-->
       </div>
-      <pre>{{ names }}</pre>
     </template>
     <template v-slot:tab_1
       ><button @click="increment">Increment</button></template
@@ -27,12 +18,6 @@
     <template v-slot:tab_2>
       <textarea style="width: 100%; min-height: 500px" :value="xml()">
       </textarea>
-    </template>
-    <template v-slot:tab_3>
-      <h3>Random names generator</h3>
-      <Button @click="generate">Generate</Button>
-      <Button @click="generateRelatives">Generate relatives</Button>
-      <pre>{{ names }}</pre>
     </template>
     <template v-slot:tab_4>
       <textarea v-model="importData"></textarea>
@@ -88,11 +73,16 @@
 <script>
 import Tabs from "@/components/Tabs";
 import Button from "@/components/atoms/Button";
+import SLPeople from "@/prods/simlife/SLPeople";
 
 export default {
   components: {
     Tabs,
     Button,
+    SLPeople,
+  },
+  mounted() {
+    //this.generateRelatives();
   },
   methods: {
     getFamilyTree(generation) {
@@ -117,7 +107,7 @@ export default {
       const boxWidth = 100;
       const boxHeight = 40;
       const marginRight = 10;
-      const marginBottom = 80;
+      const marginBottom = 120;
       const generations = this.getGenerations();
       const canvas = document.getElementById("familyTree");
       canvas.height = generations.length * (boxHeight + marginBottom);
@@ -127,6 +117,8 @@ export default {
       canvas.width = canvas.width > 400 ? canvas.width : 400;
       const ctx = canvas.getContext("2d");
       ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.strokeStyle = "black";
+      ctx.strokeRect(0, 0, canvas.width, canvas.height);
       ctx.font = "8pt sans-serif";
 
       this.boxes = [];
@@ -135,15 +127,15 @@ export default {
         const people = this.getFamilyTree(
           generations[generations.length - i - 1]
         );
+        const spaceLeft =
+          canvas.width - people.length * (boxWidth + marginRight) - marginRight;
+        const margin = spaceLeft / (people.length + 1);
         let j = 0;
         people.forEach((person) => {
           ctx.strokeStyle = person.gender === "M" ? "#3f62c4" : "#c43f91";
           ctx.fillStyle = person.gender === "M" ? "#c2ebff" : "#ffdeee";
           const boundingBox = {
-            x:
-              (canvas.width - boxWidth * people.length) / 2 +
-              j * boxWidth -
-              marginRight,
+            x: margin + (boxWidth + marginRight + margin) * j,
             y: i * (boxHeight + marginBottom) + 10,
           };
 
@@ -184,7 +176,6 @@ export default {
       }
       this.boxes.forEach((box) => {
         if (box.links) {
-          let idx = 0;
           box.links.forEach((link) => {
             const from = box.boundingBox;
             const related = this.boxes.filter((it) => {
@@ -216,7 +207,6 @@ export default {
               ctx.bezierCurveTo(c1.x, c1.y, c2.x, c2.y, dest.x, dest.y);
               ctx.stroke();
             }
-            idx++;
           });
         }
       });
@@ -473,7 +463,8 @@ export default {
         { name: "tab_2", title: "Tab 2", selected: false },
         { name: "tab_3", title: "Tab 3", selected: false },
         { name: "tab_4", title: "XSD", selected: false },
-        { name: "tab_5", title: "Namegen", selected: true },
+        { name: "tab_5", title: "Namegen", selected: false },
+        { name: "tab_6", title: "People", selected: true },
       ],
       boxes: [],
       importData: "",

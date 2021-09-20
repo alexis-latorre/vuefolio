@@ -66,7 +66,7 @@ import TextInput from "@/components/atoms/input/TextInput";
 import PasswordInput from "@/components/atoms/input/PasswordInput";
 import Message from "@/components/atoms/Message";
 import { db, auth } from "@/firebase";
-import * as crypto from "crypto";
+import sha256 from "crypto-js/sha256";
 
 export default {
   data() {
@@ -142,10 +142,7 @@ export default {
                       email: this.email,
                       name: this.name,
                       lastname: this.lastname,
-                      password: crypto
-                        .createHash("sha256")
-                        .update(this.password)
-                        .digest("hex"),
+                      password: sha256(this.password),
                     })
                     .catch((error) => {
                       this.error = error;
