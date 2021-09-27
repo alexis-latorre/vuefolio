@@ -1,22 +1,31 @@
 <template>
-  <div v-if="action">
+  <template v-if="action">
     <a
       role="button"
-      @click="click"
       :class="size !== undefined ? 'fs-' + size : ''"
       :style="'color: ' + (color !== undefined ? color : '')"
     >
+      <template v-if="leftIcon || middleIcon || rightIcon">
+        <i v-if="leftIcon && !iconOnly" :class="leftIcon"></i>
+        <i v-else-if="iconOnly" :class="middleIcon"></i>
+        <slot v-else></slot>
+        <i v-if="rightIcon && !iconOnly" :class="rightIcon"></i>
+      </template>
+      <span v-else-if="!iconOnly" class="btn-label">
+        <slot></slot>
+      </span>
+    </a>
+  </template>
+  <button v-else class="btn">
+    <template v-if="leftIcon || middleIcon || rightIcon">
       <i v-if="undefined !== leftIcon && !iconOnly" :class="leftIcon"></i>
       <i v-else-if="iconOnly" :class="middleIcon"></i>
       <slot v-else></slot>
       <i v-if="undefined !== rightIcon && !iconOnly" :class="rightIcon"></i>
-      <span class="btn-label">
-        <slot></slot>
-      </span>
-    </a>
-  </div>
-  <button v-else class="btn">
-    <slot></slot>
+    </template>
+    <span v-else class="btn-label">
+      <slot></slot>
+    </span>
   </button>
 </template>
 

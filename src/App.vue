@@ -1,6 +1,5 @@
 <template>
   <div>
-    <div v-if="debug" id="mouse">Mouse: x={{ mouse.x }}, y={{ mouse.y }}</div>
     <NavBar :links="links" />
     <div class="main">
       <router-view></router-view>
