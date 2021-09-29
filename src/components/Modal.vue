@@ -1,5 +1,5 @@
 <template>
-  <div class="modal-frame" v-if="open" @click="closeModal">
+  <div class="modal-frame" v-show="open" @click="closeModal">
     <div class="modal-container" @click="$event.stopPropagation()">
       <div class="modal-header">
         <h3>{{ title ? title : "Modal title" }}</h3>
@@ -106,6 +106,7 @@ $border: lighten($purple, 30%);
       margin-right: 0;
       padding-right: 1rem;
       max-height: calc(70vh - 51px - 2rem);
+      max-width: calc(70vw - 2rem);
       overflow: auto;
     }
   }
