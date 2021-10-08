@@ -16,6 +16,9 @@ import Countdown from "@/views/exercices/beginner/Countdown";
 import Quiz from "@/views/Quiz";
 import Battleships from "@/views/Battleships";
 import Budget from "@/views/Budget";
+import SVGGen from "@/views/SVGGen";
+import Memory from "@/views/Memory";
+import CSV2JSON from "@/views/tools/CSV2JSON";
 
 const routes = [
   {
@@ -67,6 +70,21 @@ const routes = [
     path: "/countdown",
     name: "Countdown",
     component: Countdown
+  },
+  {
+    path: "/svg",
+    name: "SVGGen",
+    component: SVGGen
+  },
+  {
+    path: "/memory-game",
+    name: "Memory",
+    component: Memory
+  },
+  {
+    path: "/csv2json",
+    name: "CSV2JSON",
+    component: CSV2JSON
   },
   {
     path: "/quiz",

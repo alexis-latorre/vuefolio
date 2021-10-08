@@ -22,6 +22,17 @@
         <li>
           <router-link to="/countdown">Countdown timer</router-link>
         </li>
+        <li>
+          <router-link to="/svg">SVG generator</router-link>
+        </li>
+        <li>
+          <router-link to="/memory-game">Memory game</router-link>
+        </li>
+        <li>
+          <router-link to="/csv2json"
+            ><i class="fas fa-tools mr-4"></i>CSV to JSON</router-link
+          >
+        </li>
       </ul>
     </Product>
   </div>

@@ -152,7 +152,7 @@ export default {
       currentQuestion: null,
       score: 0,
       maxScore: 0,
-      url: `${this.$backendUrl}/quiz`,
+      url: `${this.$backendUrl}/quiz/`,
       validAnswer: null,
       ended: false,
       answerId: null,
