@@ -142,7 +142,8 @@ export default {
                       email: this.email,
                       name: this.name,
                       lastname: this.lastname,
-                      password: sha256(this.password),
+                      password: sha256(this.password).toString(),
+                      elevation: 0,
                     })
                     .catch((error) => {
                       this.error = error;

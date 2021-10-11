@@ -13,6 +13,7 @@
     "@firebase/auth": "0.16.8",
     "@firebase/firestore": "2.3.7",
     "axios": "0.21.1",
+    "canvg": "3.0.9",
     "chart.js": "3.5.1",
     "core-js": "^3.6.5",
     "crypto-js": "4.1.1",

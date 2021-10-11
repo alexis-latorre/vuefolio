@@ -1,65 +1,58 @@
 <template>
   <ul>
-    <li v-for="link of links" :key="link.id" :class="link.right ? 'right' : ''">
-      <router-link v-if="link.href" :to="link.href">
-        <i v-if="undefined !== link.icon" :class="link.icon + ' ma-2'"></i>
-        {{ link.title }}
-      </router-link>
-      <div class="parent" v-if="link.children && link.children.length > 0">
-        <a href="#">
+    <template v-for="link of links" :key="link.id">
+      <li
+        v-if="
+          link.elevation === 0 || (user && link.elevation <= user.elevation)
+        "
+        :class="link.right ? 'right' : ''"
+      >
+        <router-link v-if="link.href" :to="link.href">
           <i v-if="undefined !== link.icon" :class="link.icon + ' ma-2'"></i>
-          <ul>
-            <template v-for="child of link.children" :key="child.id">
-              <li
-                class="child-link"
-                v-if="
-                  (child.logged && user) ||
-                  (!child.logged && undefined === user)
-                "
-              >
-                <router-link v-if="child.href" :to="child.href">
-                  <i
-                    v-if="undefined !== child.icon"
-                    :class="child.icon + ' ma-2'"
-                  ></i>
-                  {{ child.title }}
-                </router-link>
-                <a v-else @click="child.clickFunction">
-                  <i
-                    v-if="undefined !== child.icon"
-                    :class="child.icon + ' ma-2'"
-                  ></i>
-                  {{ child.title }}
-                </a>
-              </li>
-            </template>
-          </ul>
-        </a>
-      </div>
-    </li>
+          {{ link.title }}
+        </router-link>
+        <div class="parent" v-if="link.children && link.children.length > 0">
+          <a href="#">
+            <i v-if="undefined !== link.icon" :class="link.icon + ' ma-2'"></i>
+            <ul>
+              <template v-for="child of link.children" :key="child.id">
+                <li
+                  class="child-link"
+                  v-if="
+                    (child.logged && user) ||
+                    (!child.logged && undefined === user)
+                  "
+                >
+                  <router-link v-if="child.href" :to="child.href">
+                    <i
+                      v-if="undefined !== child.icon"
+                      :class="child.icon + ' ma-2'"
+                    ></i>
+                    {{ child.title }}
+                  </router-link>
+                  <a v-else @click="child.clickFunction">
+                    <i
+                      v-if="undefined !== child.icon"
+                      :class="child.icon + ' ma-2'"
+                    ></i>
+                    {{ child.title }}
+                  </a>
+                </li>
+              </template>
+            </ul>
+          </a>
+        </div>
+      </li>
+    </template>
   </ul>
 </template>
 
 <script>
-import { auth } from "@/firebase";
 export default {
   name: "NavBar",
   props: {
     links: Object,
-  },
-  data() {
-    return {
-      user: undefined,
-    };
-  },
-  mounted() {
-    auth.onAuthStateChanged((user) => {
-      if (user) {
-        this.user = user;
-      } else {
-        this.user = undefined;
-      }
-    });
+    user: Object,
   },
 };
 </script>

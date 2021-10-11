@@ -54,6 +54,7 @@ export default {
         major: 0,
         minor: 0,
       },
+      user: undefined
     };
   },
   methods: {
@@ -263,7 +264,6 @@ export default {
         this.fetchVariables();
       } else {
         this.user = undefined;
-        this.accounts = [];
       }
     });
   },

@@ -2,9 +2,13 @@
 <template>
   <input type="file" @change="preload" />
   {{ file }}
+  <button @click="loadSVG">Go</button>
+  <canvas />
 </template>
 
 <script>
+import Canvg from "canvg";
+
 export default {
   data() {
     return {
@@ -13,6 +17,19 @@ export default {
   },
   components: {},
   methods: {
+    loadSVG() {
+      const canvas = document.querySelector("canvas");
+      const ctx = canvas.getContext("2d");
+      console.log("get file");
+      Canvg.from(
+        ctx,
+        "https://file-examples-com.github.io/uploads/2020/03/file_example_SVG_20kB.svg"
+      ).then((v) => {
+        console.log("start");
+        // Start SVG rendering with animations and mouse handling.
+        v.start();
+      });
+    },
     preload(evt) {
       const reader = new FileReader();
       reader.onload = function () {

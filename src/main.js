@@ -7,6 +7,7 @@ import App from "./App";
 import store from "./store";
 
 const app = Vue.createApp(App);
+app.config.globalProperties.$appUrl = "https://ndrqm.csb.app";
 app.config.globalProperties.$backendUrl = "https://wl1th.sse.codesandbox.io";
 
 app.use(Vuex);

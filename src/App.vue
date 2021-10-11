@@ -1,15 +1,20 @@
 <template>
   <div>
-    <NavBar :links="links" />
+    <NavBar :links="links" :user="user" />
     <div class="main">
-      <router-view></router-view>
+      <router-view
+        v-if="user || anonymousPaths.indexOf(url) !== -1"
+        :user="user"
+      ></router-view>
+      <p v-else>Not allowed!</p>
     </div>
   </div>
 </template>
 
 <script>
 import NavBar from "./components/NavBar.vue";
-import { auth } from "@/firebase";
+import { db, auth } from "@/firebase";
+import { setInterval } from "core-js";
 
 export default {
   name: "App",
@@ -18,24 +23,52 @@ export default {
   },
   data() {
     return {
+      url: "",
+      anonymousPaths: ["/", "/login", "/signup"],
       links: [
-        { id: 1, title: "Home", href: "/", icon: "fas fa-home" },
-        { id: 2, title: "Draggable", href: "/draggable", icon: "fas fa-list" },
-        { id: 3, title: "TODO", href: "/todo", icon: "fas fa-tasks" },
+        { id: 1, title: "Home", href: "/", icon: "fas fa-home", elevation: 0 },
+        {
+          id: 2,
+          title: "Draggable",
+          href: "/draggable",
+          icon: "fas fa-list",
+          elevation: 999,
+        },
+        {
+          id: 3,
+          title: "TODO",
+          href: "/todo",
+          icon: "fas fa-tasks",
+          elevation: 999,
+        },
         {
           id: 3.5,
           title: "Budget",
           href: "/budget",
           icon: "fas fa-hand-holding-usd",
+          elevation: 999,
         },
-        { id: 4, title: "Quiz", href: "/quiz", icon: "fas fa-question" },
+        {
+          id: 4,
+          title: "Quiz",
+          href: "/quiz",
+          icon: "fas fa-question",
+          elevation: 999,
+        },
         {
           id: 5,
           title: "Battleships",
           href: "/battleships",
           icon: "fas fa-anchor",
+          elevation: 999,
         },
-        { id: 99, title: "Lab", href: "/lab", icon: "fas fa-flask" },
+        {
+          id: 99,
+          title: "Lab",
+          href: "/lab",
+          icon: "fas fa-flask",
+          elevation: 999,
+        },
         {
           id: 100,
           icon: "fas fa-user",
@@ -66,6 +99,7 @@ export default {
               },
             },
           ],
+          elevation: 0,
         },
       ],
       mouse: { x: 0, y: 0 },
@@ -74,11 +108,24 @@ export default {
     };
   },
   mounted() {
-    auth.onAuthStateChanged((user) => {
-      if (user) {
-        this.user = user;
+    setInterval(() => {
+      this.url = window.location.href.substr(this.$appUrl.length);
+      if (this.url.indexOf("#") !== -1) this.url = this.url.split("#")[0];
+    }, 1);
+    auth.onAuthStateChanged((gUser) => {
+      if (gUser) {
+        this.user = gUser;
+        db.collection("users")
+          .where("email", "==", gUser.email)
+          .get()
+          .then((users) => {
+            users.forEach((user) => {
+              this.user.elevation = user.data().elevation;
+              console.log(this.user.elevation);
+            });
+          });
       } else {
-        this.user = null;
+        this.user = undefined;
       }
     });
   },
