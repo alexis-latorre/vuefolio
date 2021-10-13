@@ -1,8 +1,9 @@
 <!-- Don't mind this file, it's my sandbox -->
 <template>
-  <input type="file" @change="preload" />
-  {{ file }}
-  <button @click="loadSVG">Go</button>
+  <input type="text" v-model="ext" />
+  <!--input type=" file" @change="preload" />
+  {{ file }}-->
+  <button @click="loadSVG">Generate</button>
   <canvas />
 </template>
 
@@ -13,6 +14,7 @@ export default {
   data() {
     return {
       file: null,
+      ext: "",
     };
   },
   components: {},
@@ -22,13 +24,13 @@ export default {
       const ctx = canvas.getContext("2d");
       Canvg.from(
         ctx,
-        "https://raw.githubusercontent.com/alexis-latorre/vuefolio/ad39f06f5ac88e97572788b6e3b6156511cc072a/src/assets/svg/file.svg"
+        "https://raw.githubusercontent.com/alexis-latorre/vuefolio/main/src/assets/svg/file.svg"
       ).then((v) => {
         // Start SVG rendering with animations and mouse handling.
         v.start();
         ctx.font = "48px sans-serif";
         ctx.fillStyle = "black";
-        ctx.fillText("text", 5, 31);
+        ctx.fillText(this.ext, 5, 31);
         v.stop();
       });
     },
