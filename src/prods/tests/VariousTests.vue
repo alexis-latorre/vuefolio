@@ -20,14 +20,16 @@ export default {
     loadSVG() {
       const canvas = document.querySelector("canvas");
       const ctx = canvas.getContext("2d");
-      console.log("get file");
       Canvg.from(
         ctx,
-        "https://file-examples-com.github.io/uploads/2020/03/file_example_SVG_20kB.svg"
+        "https://raw.githubusercontent.com/alexis-latorre/vuefolio/ad39f06f5ac88e97572788b6e3b6156511cc072a/src/assets/svg/file.svg"
       ).then((v) => {
-        console.log("start");
         // Start SVG rendering with animations and mouse handling.
         v.start();
+        ctx.font = "48px sans-serif";
+        ctx.fillStyle = "black";
+        ctx.fillText("text", 5, 31);
+        v.stop();
       });
     },
     preload(evt) {
