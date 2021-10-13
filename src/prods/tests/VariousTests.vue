@@ -4,7 +4,7 @@
   <!--input type=" file" @change="preload" />
   {{ file }}-->
   <button @click="loadSVG">Generate</button>
-  <canvas />
+  <canvas height="1000" width="1000" style="border: solid 1px black" />
 </template>
 
 <script>
@@ -28,9 +28,15 @@ export default {
       ).then((v) => {
         // Start SVG rendering with animations and mouse handling.
         v.start();
-        ctx.font = "48px sans-serif";
-        ctx.fillStyle = "black";
-        ctx.fillText(this.ext, 5, 31);
+        ctx.save();
+        ctx.font = "200px sans-serif";
+        ctx.fillStyle = "white";
+        ctx.strokeStyle = "white";
+        ctx.textAlign = "center";
+        ctx.lineWidth = 10;
+        ctx.fillText(this.ext.toUpperCase(), 380, 775);
+        ctx.strokeText(this.ext.toUpperCase(), 380, 775);
+        ctx.restore();
         v.stop();
       });
     },
@@ -48,6 +54,11 @@ export default {
       };
       reader.readAsArrayBuffer(evt.target.files[0]);
       this.file = evt.target;
+    },
+  },
+  watch: {
+    ext() {
+      if (this.ext.length > 3) this.ext = this.ext.substr(0, 3);
     },
   },
 };
