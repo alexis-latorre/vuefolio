@@ -19,6 +19,7 @@ import Budget from "@/views/Budget";
 import SVGGen from "@/views/SVGGen";
 import Memory from "@/views/Memory";
 import CSV2JSON from "@/views/tools/CSV2JSON";
+import FileSystem from "@/views/FileSystem";
 
 const routes = [
   {
@@ -85,6 +86,11 @@ const routes = [
     path: "/csv2json",
     name: "CSV2JSON",
     component: CSV2JSON
+  },
+  {
+    path: "/fs",
+    name: "FileSystem",
+    component: FileSystem
   },
   {
     path: "/quiz",
