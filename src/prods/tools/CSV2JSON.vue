@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div id="csv" class="container">
     <p>
       Current version: {{ previous.release }}.{{ previous.major }}.{{
         previous.minor
@@ -28,7 +28,9 @@
       />
     </p>
     <button
-      @click="download(`flux_normalise_${release}.${major}.${minor}.json`)"
+      @click="
+        download(`ISI_FLUX_NORMALISE_CIBLE_${release}.${major}.${minor}.json`)
+      "
     >
       Get JSON
     </button>
@@ -44,7 +46,6 @@ export default {
       csv: "",
       json: "",
       jsonObject: {},
-      arrays: ["TIERS", "GN"],
       textFile: null,
       release: 0,
       major: 0,
@@ -58,6 +59,9 @@ export default {
     };
   },
   methods: {
+    createPaths(aliases, propName, path) {
+      aliases.set(propName, path);
+    },
     download(filename) {
       if (this.release < this.previous.release) {
         console.log(
@@ -84,14 +88,21 @@ export default {
         );
         return;
       }
+      if (
+        this.minor === this.previous.minor &&
+        this.major === this.previous.major &&
+        this.release === this.previous.release
+      ) {
+        console.log(`You must change version before saving new data`);
+        return;
+      }
+      const update = {
+        flux_normalise_version: `${this.release}.${this.major}.${this.minor}`,
+      };
+      update[filename] = document.getElementById("output").innerText;
       db.collection("groupama")
         .doc("static")
-        .set(
-          {
-            flux_normalise_version: `${this.release}.${this.major}.${this.minor}`,
-          },
-          { merge: true }
-        )
+        .set(update, { merge: true })
         .then((it) => {
           this.fetchVariables();
           const element = document.createElement("a");
@@ -112,147 +123,38 @@ export default {
         });
     },
     csv2json() {
-      this.jsonObject = {
-        COMMUNICATIONS: {
-          COMMUNICATION: [],
-        },
-      };
+      try {
+        this.jsonObject = {};
+        const map = new Map();
+        this.jsonObject = {};
+        this.csv.split("\n").forEach((csvLine) => {
+          this.createPaths(
+            map,
+            `COMMUNICATIONS;COMMUNICATION;${csvLine}`,
+            `${csvLine.split(";").pop()}_data`
+          );
+        });
 
-      const objCom = {};
-      const isArray = new Map();
-      let ce = 0; //currentElement
+        map.forEach((value, key) => {
+          const keys = key.split(";"),
+            last = keys.pop();
+          keys.reduce((r, a) => (r[a] = r[a] || {}), this.jsonObject)[
+            last
+          ] = value;
+        });
 
-      this.csv.split("\n").forEach((csvLine) => {
-        const els = csvLine.split(";");
-        const nbEls = els.length;
-
-        if (nbEls > ce) {
-          const name = els[ce];
-          let obj = {};
-          isArray.set(name, this.arrays.indexOf(name) !== -1);
-
-          if (isArray.get(name)) {
-            obj = [];
-          } else {
-            if (nbEls === ce + 1) obj = `${name}_data`;
-          }
-
-          objCom[name] = obj;
-        }
-      });
-      ce++;
-
-      this.csv.split("\n").forEach((csvLine) => {
-        const els = csvLine.split(";");
-        const nbEls = els.length;
-
-        if (nbEls > ce) {
-          const name = els[ce];
-          let obj = {};
-          isArray.set(name, this.arrays.indexOf(name) !== -1);
-
-          if (isArray.get(name)) {
-            obj = [];
-          } else {
-            if (nbEls === ce + 1) {
-              if (isArray.get(els[ce - 1])) obj[name] = `${name}_data`;
-              else obj = `${name}_data`;
-            }
-          }
-
-          if (isArray.get(els[ce - 1])) {
-            objCom[els[ce - 1]].push(obj);
-          } else objCom[els[ce - 1]][name] = obj;
-        }
-      });
-      ce++;
-
-      this.csv.split("\n").forEach((csvLine) => {
-        const els = csvLine.split(";");
-        const nbEls = els.length;
-
-        if (nbEls > ce) {
-          const name = els[ce];
-          let obj = {};
-          isArray.set(name, this.arrays.indexOf(name) !== -1);
-
-          if (isArray.get(name)) {
-            obj = [];
-          } else {
-            if (nbEls === ce + 1) {
-              if (isArray.get(els[ce - 1])) obj[name] = `${name}_data`;
-              else obj = `${name}_data`;
-            }
-          }
-
-          if (isArray.get(els[ce - 1])) {
-            if (isArray.get(els[ce - 2])) {
-              objCom[els[ce - 2]][0][els[ce - 1]].push(obj);
-            } else {
-              objCom[els[ce - 2]][els[ce - 1]].push(obj);
-            }
-          } else {
-            if (isArray.get(els[ce - 2])) {
-              if (isArray.get(els[ce - 1]))
-                objCom[els[ce - 2]][0][els[ce - 1]][0][name] = obj;
-              else objCom[els[ce - 2]][0][els[ce - 1]][name] = obj;
-            } else {
-              if (isArray.get(els[ce - 1]))
-                objCom[els[ce - 2]][els[ce - 1]][0][name] = obj;
-              else objCom[els[ce - 2]][els[ce - 1]][name] = obj;
-            }
-          }
-        }
-      });
-      ce++;
-
-      this.csv.split("\n").forEach((csvLine) => {
-        const els = csvLine.split(";");
-        const nbEls = els.length;
-
-        if (nbEls > ce) {
-          const name = els[ce];
-          let obj = {};
-          isArray.set(name, this.arrays.indexOf(name) !== -1);
-
-          if (isArray.get(name)) {
-            obj = [];
-          } else {
-            if (nbEls === ce + 1) {
-              if (isArray.get(els[ce - 1])) obj[name] = `${name}_data`;
-              else obj = `${name}_data`;
-            }
-          }
-
-          if (isArray.get(els[ce - 1])) {
-            if (isArray.get(els[ce - 2])) {
-              if (isArray.get(els[ce - 3])) {
-                objCom[els[ce - 3]][0][els[ce - 2]][0][els[ce - 1]].push(obj);
-              } else {
-                objCom[els[ce - 3]][els[ce - 2]][els[ce - 1]].push(obj);
-              }
-            } else {
-              if (isArray.get(els[ce - 3]))
-                objCom[els[ce - 3]][0][els[ce - 2]][els[ce - 1]].push(obj);
-              else objCom[els[ce - 3]][els[ce - 2]][els[ce - 1]].push(obj);
-            }
-          } else {
-            if (isArray.get(els[ce - 2])) {
-              if (isArray.get(els[ce - 1]))
-                objCom[els[ce - 2]][0][els[ce - 1]][0][name] = obj;
-              else objCom[els[ce - 2]][0][els[ce - 1]][name] = obj;
-            } else {
-              if (isArray.get(els[ce - 1]))
-                objCom[els[ce - 2]][els[ce - 1]][0][name] = obj;
-              else objCom[els[ce - 2]][els[ce - 1]][name] = obj;
-            }
-          }
-        }
-      });
-      ce++;
-      this.jsonObject.COMMUNICATIONS.COMMUNICATION.push(objCom);
-      this.jsonObject = JSON.parse(JSON.stringify(this.jsonObject));
-      this.json = JSON.stringify(this.jsonObject);
+        this.jsonObject.COMMUNICATIONS.COMMUNICATION.SINISTRE.INFOS.GN = [
+          this.jsonObject.COMMUNICATIONS.COMMUNICATION.SINISTRE.INFOS.GN,
+        ];
+        this.jsonObject.COMMUNICATIONS.COMMUNICATION.SINISTRE.TIERS = [
+          this.jsonObject.COMMUNICATIONS.COMMUNICATION.SINISTRE.TIERS,
+        ];
+        this.jsonObject.COMMUNICATIONS.COMMUNICATION = [
+          this.jsonObject.COMMUNICATIONS.COMMUNICATION,
+        ];
+      } catch (e) {
+        console.error(e);
+      }
     },
     json2csv() {
       this.csv = `CSV: ${this.json}`;
