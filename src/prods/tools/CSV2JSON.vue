@@ -96,30 +96,46 @@ export default {
         console.log(`You must change version before saving new data`);
         return;
       }
+      const flux_normalise_version = `${this.release}.${this.major}.${this.minor}`;
       const update = {
-        flux_normalise_version: `${this.release}.${this.major}.${this.minor}`,
+        csv: this.csv,
+        json: this.jsonObject,
       };
-      update[filename] = document.getElementById("output").innerText;
+
       db.collection("groupama")
         .doc("static")
-        .set(update, { merge: true })
+        .collection("history")
+        .doc(flux_normalise_version)
+        .set(update)
         .then((it) => {
-          this.fetchVariables();
-          const element = document.createElement("a");
-          element.setAttribute(
-            "href",
-            "data:application/json;charset=utf-8," +
-              encodeURIComponent(document.getElementById("output").innerText)
-          );
-          element.setAttribute("download", filename);
-          element.innerHTML = "Download";
+          db.collection("groupama")
+            .doc("static")
+            .set(
+              {
+                flux_normalise_version,
+              },
+              { merge: true }
+            )
+            .then((it) => {
+              this.fetchVariables();
+              const element = document.createElement("a");
+              element.setAttribute(
+                "href",
+                "data:application/json;charset=utf-8," +
+                  encodeURIComponent(
+                    document.getElementById("output").innerText
+                  )
+              );
+              element.setAttribute("download", filename);
+              element.innerHTML = "Download";
 
-          element.style.display = "none";
-          document.body.appendChild(element);
+              element.style.display = "none";
+              document.body.appendChild(element);
 
-          element.click();
+              element.click();
 
-          document.body.removeChild(element);
+              document.body.removeChild(element);
+            });
         });
     },
     csv2json() {
@@ -175,6 +191,19 @@ export default {
             this.previous.release = flux_normalise_version[0];
             this.previous.major = flux_normalise_version[1];
             this.previous.minor = flux_normalise_version[2];
+
+            db.collection("groupama")
+              .doc("static")
+              .collection("history")
+              .doc(`${this.release}.${this.major}.${this.minor}`)
+              .get()
+              .then((doc) => {
+                if (doc.exists) {
+                  const data = doc.data();
+                  this.csv = data.csv;
+                  this.jsonObject = data.json;
+                }
+              });
           }
         });
     },

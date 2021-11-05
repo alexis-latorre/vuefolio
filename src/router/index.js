@@ -20,6 +20,8 @@ import SVGGen from "@/views/SVGGen";
 import Memory from "@/views/Memory";
 import CSV2JSON from "@/views/tools/CSV2JSON";
 import FileSystem from "@/views/FileSystem";
+import GameOfLife from "@/views/GameOfLife";
+import CSS from "@/views/CSS";
 
 const routes = [
   {
@@ -126,6 +128,16 @@ const routes = [
     path: "/login",
     name: "LogIn",
     component: LogIn
+  },
+  {
+    path: "/gameoflife",
+    name: "GameOfLife",
+    component: GameOfLife
+  },
+  {
+    path: "/css",
+    name: "CSS",
+    component: CSS
   }
 ];
 

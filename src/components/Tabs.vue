@@ -7,7 +7,7 @@
         :key="tab.name"
         @click="select(tab)"
       >
-        {{ tab.title }}
+        {{ tab.title ? tab.title : "Tab" }}
       </div>
     </div>
     <div class="tab--content">

@@ -35,8 +35,14 @@
             ><i class="fas fa-tools mr-4"></i>CSV to JSON</router-link
           >
         </li>
-        <li v-if="user && user.elevation >= 0">
+        <li v-if="user && user.elevation > 10">
           <router-link to="/fs">File system</router-link>
+        </li>
+        <li v-if="user && user.elevation > 10">
+          <router-link to="/gameoflife">Game of Life</router-link>
+        </li>
+        <li v-if="user && user.elevation > 10">
+          <router-link to="/css">CSS</router-link>
         </li>
       </ul>
     </Product>

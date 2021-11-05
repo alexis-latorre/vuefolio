@@ -1,19 +1,8 @@
 <template>
-  <div>
-    <Product
-      title="CSV2JSON"
-      appUrl="csv2json"
-      :metas="metas"
-      :history="history"
-    >
-      <template v-slot:description> Convert CSV data to JSON </template>
-      <CSV2JSON />
-    </Product>
-  </div>
+  <CSV2JSON />
 </template>
 
 <script>
-import Product from "@/components/Product";
 import CSV2JSON from "@/prods/tools/CSV2JSON";
 
 export default {
@@ -28,7 +17,6 @@ export default {
     };
   },
   components: {
-    Product,
     CSV2JSON,
   },
 };
