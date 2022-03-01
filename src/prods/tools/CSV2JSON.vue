@@ -143,10 +143,11 @@ export default {
         this.jsonObject = {};
         const map = new Map();
         this.jsonObject = {};
-        this.csv.split("\n").forEach((csvLine) => {
+        this.csv.split("\n").forEach((csvLineUpper) => {
+          const csvLine = csvLineUpper.toLowerCase();
           this.createPaths(
             map,
-            `COMMUNICATIONS;COMMUNICATION;${csvLine}`,
+            `communications;communication;${csvLine}`,
             `${csvLine.split(";").pop()}_data`
           );
         });
@@ -159,14 +160,14 @@ export default {
           ] = value;
         });
 
-        this.jsonObject.COMMUNICATIONS.COMMUNICATION.SINISTRE.INFOS.GN = [
-          this.jsonObject.COMMUNICATIONS.COMMUNICATION.SINISTRE.INFOS.GN,
+        this.jsonObject.communications.communication.sinistre.infos.gn = [
+          this.jsonObject.communications.communication.sinistre.infos.gn,
         ];
-        this.jsonObject.COMMUNICATIONS.COMMUNICATION.SINISTRE.TIERS = [
-          this.jsonObject.COMMUNICATIONS.COMMUNICATION.SINISTRE.TIERS,
+        this.jsonObject.communications.communication.sinistre.tiers = [
+          this.jsonObject.communications.communication.sinistre.tiers,
         ];
-        this.jsonObject.COMMUNICATIONS.COMMUNICATION = [
-          this.jsonObject.COMMUNICATIONS.COMMUNICATION,
+        this.jsonObject.communications.communication = [
+          this.jsonObject.communications.communication,
         ];
       } catch (e) {
         console.error(e);

@@ -22,6 +22,10 @@ import CSV2JSON from "@/views/tools/CSV2JSON";
 import FileSystem from "@/views/FileSystem";
 import GameOfLife from "@/views/GameOfLife";
 import CSS from "@/views/CSS";
+import Anagram from "@/views/Anagram";
+import MyRH from "@/views/MyRH";
+import Pokedex from "@/views/exercices/weekly-projects/Pokedex";
+import Wordle from "@/views/exercices/weekly-projects/Wordle";
 
 const routes = [
   {
@@ -138,6 +142,26 @@ const routes = [
     path: "/css",
     name: "CSS",
     component: CSS
+  },
+  {
+    path: "/anagram",
+    name: "Anagram",
+    component: Anagram
+  },
+  {
+    path: "/myrh",
+    name: "MyRH",
+    component: MyRH
+  },
+  {
+    path: "/pokedex",
+    name: "Pokedex",
+    component: Pokedex
+  },
+  {
+    path: "/wordle",
+    name: "Wordle",
+    component: Wordle
   }
 ];
 

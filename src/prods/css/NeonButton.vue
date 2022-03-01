@@ -37,9 +37,7 @@ export default {
     this.neon = this.$props.title ? this.$props.title : this.neon;
     if (!this.$props.sound) return;
 
-    this.audio = new Audio(
-      "https://ndrqm.csb.app/assets/sound/" + this.$props.sound
-    );
+    this.audio = new Audio(`${this.$appUrl}/assets/sound/${this.$props.sound}`);
     this.audio.play();
     this.audio.addEventListener("ended", () => {
       this.audio.play();

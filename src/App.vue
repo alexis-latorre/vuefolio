@@ -2,11 +2,7 @@
   <div>
     <NavBar :links="links" :user="user" />
     <div class="main">
-      <router-view
-        v-if="user || anonymousPaths.indexOf(url) !== -1"
-        :user="user"
-      ></router-view>
-      <p v-else>Not allowed!</p>
+      <router-view></router-view>
     </div>
   </div>
 </template>
@@ -60,6 +56,13 @@ export default {
           title: "Battleships",
           href: "/battleships",
           icon: "fas fa-anchor",
+          elevation: 999,
+        },
+        {
+          id: 5,
+          title: "MyRH",
+          href: "/myrh",
+          icon: "far fa-id-badge",
           elevation: 999,
         },
         {
@@ -121,7 +124,6 @@ export default {
           .then((users) => {
             users.forEach((user) => {
               this.user.elevation = user.data().elevation;
-              console.log(this.user.elevation);
             });
           });
       } else {
